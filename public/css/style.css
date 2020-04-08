@@ -1,0 +1,359 @@
+/* Home */
+@import "vars.css";
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background:var(--main-site-color);
+  height: 50px;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-left,
+.nav-right li {
+  float: left;
+}
+
+.nav-left li a {
+  padding: 0 10px;
+}
+
+.nav-left li a,
+.nav-right li a {
+  display: block;
+  line-height: 50px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+/* brand hover */
+.nav-left li a:hover,
+.nav-left li a:focus {
+  background: var(--hover-color);
+  color: black;
+}
+
+.nav-right {
+  float: right;
+}
+
+.nav-right li a:hover,
+.nav-right li a:focus {
+  background: var(--hover-color);
+  color: black;
+}
+
+.banner {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div.banner div.destaque {
+  height: 450px;
+  width: 30%;
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+  position: relative;
+}
+
+div.banner div.destaque p {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: #f00;
+  color: #fff;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+}
+
+div.banner div.destaque a {
+  display: block;
+  min-height: 420px;
+}
+
+div.banner img {
+  width:100%;
+}
+
+div.vitrine{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+div.vitrine figure.produto a{ 
+  display:block; 
+  text-decoration: none; 
+  line-height: 40px;
+}
+
+div.vitrine figure img{
+  width: 100%;
+}
+
+div.vitrine figure.produto a figcaption{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+div.vitrine figure{
+  display: block;
+  margin-left:17px;
+  margin-right: 15px;
+  width:30%;
+  position: relative;
+  box-shadow: #000 5px 5px 4px;
+}
+
+div.vitrine figure.produto h3{
+  margin-top:0;
+  height: 40px;
+  background: red;
+  color:#fff;
+  text-align:center;
+}
+
+div.vitrine figure.produto figcaption:nth-last-child(1){
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background: black;
+  color:#fff;
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  bottom: 0;
+}
+
+/* Preço */
+div.vitrine figure.produto p{
+  background: linear-gradient(orange,yellow);
+  margin-top: 10px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+/* Login User Page / Login Admin */
+
+form.login-user{
+  width: 300px;
+  height: 230px;
+  background:var(--main-site-color);
+  position: relative;
+  margin:0 auto;
+  padding: 15px;
+  color:#fff;
+  margin-top:150px;
+}
+
+form.login-user input,
+form.login-user label,
+form.login-user button
+{
+  padding: 0;
+  margin: 0;
+  border:none;
+  width: 100%;
+  display: block;
+  height: 40px;
+  line-height: 40px;
+}
+
+form.login-user input{ text-indent: 10px;}
+
+form.login-user input[type="submit"]{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: calc(100% - 20px);
+  background: var(--hover-color);
+  color:var(--hover-text-color);
+}
+
+form.login-user input[type="submit"]:hover,
+form.login-user input[type="submit"]:focus{
+  background:green;
+  color:#fff;
+}
+
+/* Cadastro Usuário | cadastro.php */
+
+form.register-user input,
+form.register-user label{
+  margin: 0;
+  padding: 0;
+  border:none;
+  width: 100%;
+  margin-left:5px;
+  width: calc(100% - 10px);
+  display: block;
+}
+
+
+
+form.register-user input{
+  margin-bottom:30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 17px;
+}
+
+form.register-user label[for="nome"]{
+  margin-top:10px;
+}
+
+form.register-user label{ color:var(--text-light); font-weight: bold;margin-bottom:2px;}
+
+
+
+form.register-user input[type="text"],
+form.register-user input[type="password"],
+form.register-user input[type="email"]{
+  text-indent: 10px;
+}
+
+form.register-user input[type="submit"]{
+  background: var(--hover-color);
+}
+
+
+form.register-user{
+  background: var(--main-site-color);
+  height: 300px;
+  width: 400px;
+  position: absolute;
+  top:calc(50% - 150px);
+  left: calc(50% - 200px);
+}
+
+/* Página de detalhes do produto */
+
+div#produto h1{
+  text-align: center;
+}
+
+div#produto img{
+  width: 400px;
+  margin-left: 15px;
+  float: left;
+}
+
+div#produto p{
+  float: left;
+  display: inline;
+  margin-left: 15px;
+  text-indent: 30px;
+}
+
+div#produto div#counter{
+  margin-top: 30px;
+  width: 500px;
+  clear: both;
+  margin-left: 200px;
+}
+
+div#galeria{
+  clear: both;
+  width: 400px;
+  position: relative;
+}
+
+div#galeria img {
+  width: 100px;
+  margin-left: 30px;
+  margin-top: 15px;
+}
+
+div#produto div#counter input{
+  width: 70px;
+}
+
+#comentarios{
+  clear:both;
+}
+
+#comentarios img:nth-child(1){margin-top: 5px;}
+#comentarios img {
+  margin-left: 15px;
+  width: 64px;
+  background: #fff;
+  border-radius: 50%;
+  float: left;
+  margin-right: 10px;
+}
+
+.comment-section{
+  padding: 10px 0;
+  background: purple;
+  color:#fff;
+  border-radius: 20px;
+  width: calc(100% - 30px);
+  margin: 15px 0 15px 10px;
+}
+
+#comentarios .comment-section:nth-child(even){
+  clear: both;
+  background-color: yellow;
+  color: black;
+}
+
+#comentarios .comment-section:nth-child(even) img {
+  float: right;
+  margin-right: 15px;
+}
+
+#comentarios .comment-section:nth-child(even) p {
+  margin-left: 15px;
+}
+
+.comment-content{
+  display: block;
+  margin-top: 20px;
+  text-indent: 15px;
+}
+
+.clearfix::after,.clearfix::before{
+  content:'';
+  display:table;
+  clear: both;
+}
+
+.comment {
+  padding-bottom: 30px;
+}
+
+#let-comment textarea{
+  display: block;
+  width: 700px;
+  margin: 0 auto;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+#let-comment button{
+  padding: 10px;
+  background: aquamarine;
+  font-size: large;
+  width: 700px;
+  border-radius: 10px;
+  color: #000;
+  margin: 20px auto;
+  display: block;
+}

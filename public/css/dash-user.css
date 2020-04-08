@@ -1,0 +1,112 @@
+@import "vars.css";
+
+@import "dash-top-menu.css";
+
+table {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 20px;
+}
+
+table,th,tr,td{
+    border:1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+table a, table a:visited{
+    text-decoration: none;
+    color:#000;
+}
+
+/* Menu Override */
+ul li:hover a{
+    background: var(--dash-user-hover-bg); 
+    color:var(--dash-user-hover-text) !important;
+}
+
+
+nav#top-menu{
+    display: flex;
+    position: fixed;    
+    top:0;
+    width: 100%;
+    flex-direction: row;
+    height: 50px;
+    justify-content: space-between;
+    background: var(--dash-user-menu-top-bg);
+}
+
+ul#top-menu-right li:hover ~ ul,
+ul#top-menu-right  ul:hover{ 
+    background: var(--dash-user-menu-top-bg);
+}
+
+/* Páginas do Painel */
+
+div#pedidos{
+    height: calc(100vh);
+    width: 90%;
+    overflow-y: auto;
+}
+
+div#editar{
+    min-height: calc(100vh - 50px);
+}
+
+div#pedidos h1{
+    padding-top: 50px;
+}
+
+/* Formulário */
+
+form.dados {
+    width: 80%;
+    margin: 0 auto;
+}
+
+form.dados label, 
+form.dados input, 
+form.dados select{
+    width:100%;
+    margin:0;
+    padding:0;
+    border:none;
+}
+
+form.dados input[type="text"],
+form.dados input[type="email"],
+form.dados input[type="password"],
+form.dados input[type="date"]
+ {
+    border: 1px solid black;
+    border-radius: 5px;
+    line-height: 25px;
+    margin-bottom: 10px;
+    text-indent: 10px;
+}
+
+form.dados select, form.dados input[type="submit"]{ margin-bottom: 10px;}
+
+form.dados input[type="submit"],
+form.dados select
+{
+    padding: 5px 0;
+    font-size:15px;
+    background: var(--dash-user-menu-top-bg);
+    color:#fff;
+    border-radius: 5px;
+}
+
+form.dados label{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+form.dados input[type="submit"]:hover,
+form.dados input[type="submit"]:focus,
+form.dados select:focus,
+form.dados select:hover
+{
+    background: var(--dash-user-hover-bg);
+}

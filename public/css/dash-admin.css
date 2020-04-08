@@ -1,0 +1,79 @@
+@import "vars.css";
+
+/* reset */
+body, ul , li, h1{
+    margin:0;
+    padding: 0;
+    list-style: none;
+}
+
+ul li:hover a{
+    background: var(--dash-admin-hover-bg);
+    color:var(--dash-admin-hover-text) !important;
+}
+
+#top-menu{
+    display: flex;
+    position: fixed;    
+    top:0;
+    width: 100%;
+    flex-direction: row;
+    height: 50px;
+    justify-content: space-between;
+    background: var(--dash-admin-menu-top-bg);
+}
+ul#top-menu-left li a {padding: 0 10px;}
+ul#top-menu-left li a,
+ul#top-menu-left li{ 
+    display: block; 
+    text-decoration: none;
+    color: var(--text-light);
+}
+
+ul#top-menu-left li{
+    float: left;
+    
+    line-height: 50px;
+}
+
+ul#top-menu-right li a{
+    line-height: 50px;
+    display: block;
+    padding: 0 10px;
+    text-decoration: none;
+    color:#fff;
+}
+
+ul#top-menu-right  ul { visibility: hidden;}
+
+ul#top-menu-right li:hover ~ ul,
+ul#top-menu-right  ul:hover{ 
+    visibility: visible;
+    background: var(--dash-admin-menu-top-bg);
+}
+
+/* Páginas */
+
+div#produtos,div#pedidos,div#usuarios{
+    height: calc(100vh - 50px);
+}
+
+div#editar { height: calc(100vh)}
+
+div#paginas div h1{    
+    padding-top:50px;
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

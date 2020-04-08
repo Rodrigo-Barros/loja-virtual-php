@@ -1,0 +1,7 @@
+1 - criar um sistema de avaliações dos produtos pelos usuários baseados em notas.
+
+2 Telas - tela de login de usuários. - OK
+          tela de cadastro de usuários. - OK
+          tela de login dos administradores. - OK
+          tela de gerenciamento dos produtos.
+          tela de gerenciamento dos administradores.

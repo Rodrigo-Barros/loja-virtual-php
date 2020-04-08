@@ -1,0 +1,17 @@
+:root {
+    --main-site-color: purple;
+    --hover-color: yellow;/* usado para fazer hovers do site */
+    --hover-text-color: black;
+    --text-light: #fff;
+    --text-dark:#000;
+
+    /* dash-admin */
+    --dash-admin-menu-top-bg: green;
+    --dash-admin-hover-text: #fff;
+    --dash-admin-hover-bg: red;
+
+    /* dash-user */
+    --dash-user-menu-top-bg: blue;
+    --dash-user-hover-text: #fff;
+    --dash-user-hover-bg: red;
+  }
