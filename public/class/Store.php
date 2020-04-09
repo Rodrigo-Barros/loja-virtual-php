@@ -60,12 +60,12 @@ class Store
     }
 
     public function selectItemsFromCart($userId) : object{
-        $query = Database::sql("SELECT Produtos.nome, Produtos.preco, Produtos.estoque, Carrinho.quantidade
-        FROM Produtos
-            INNER JOIN Carrinho
+        $query = Database::sql("SELECT Produtos.nome, Produtos.preco, Produtos.estoque, Produtos.imagens,
+            Carrinho.quantidade
+        FROM Carrinho
+	        INNER JOIN Produtos
             ON Carrinho.produto_id = Produtos.id
-            INNER JOIN Usuarios
-        WHERE Usuarios.id = :userId");
+        WHERE Carrinho.usuario_id = :userId");
         $query->bindParam(":userId",$userId);
         $query->execute();
         return $query;

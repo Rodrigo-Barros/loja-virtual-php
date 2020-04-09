@@ -2,7 +2,7 @@
     require 'class/autoload.php';
     $store = new Store();
     session_start(); 
-    if (isset($_SESSION['userInfo'])==False ){
+    if (isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']=='admin'){
         header('Location: public');
         exit();
     }
@@ -24,21 +24,26 @@
                 <th>Ação</th>
             </thead>
             <tbody>
-                <tr>
+                <!-- <tr>
                     <td>PC master Racer</td>
                     <td><input type="number" max="10" min="1" ></td>
                     <td>R$ 5.000,00</td>
                     <td>R$ 10.000,00</td>
                     <td><a class="remove-btn" href="#">Remover</a></td>
-                </tr>
+                </tr> -->
 
                 <?php 
                     $produtos=$store->selectItemsFromCart($_SESSION['userInfo']['id']);
+                    // foreach ($produtos as $produto){
+                    //     echo "<pre>";
+                    //     var_dump($produto);
+                    //     echo "</pre>";
+                    // }
                     foreach ($produtos as $produto):
                 ?>
                     <tr>
-                    <td><?=$produto['nome']?></td>
-                    <td><input type="number" max="10" min="1" value="<?=$produto['quantidade'];?>"></td>
+                    <td><img src="uploads/<?=json_decode($produto['imagens'])[0]?>" alt="teste"><p><?=$produto['nome']?></p></td>
+                    <td><input type="number" max="<?=$produto['estoque']?>" min="1" value="<?=$produto['quantidade'];?>"></td>
                     <td>R$ <?=$produto['preco']?></td>
                     <td>R$ <?=$produto['preco']*$produto['quantidade']?></td>
                     <td><a class="remove-btn" href="#">Remover</a></td>
@@ -47,7 +52,6 @@
                 <?php
                     endforeach;
                 ?>
-
 
                 <!-- Não alterar essa linha -->
                 <tr><td colspan="4">Total: R$ 10.000,00</td></tr>

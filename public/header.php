@@ -10,6 +10,7 @@
             <li><a href="registro">Cadastre-se</a></li>
             <li><a href="login">Login</a></li>
         <?php elseif($_SESSION['userInfo']['userType']=='user'): ?>
+            <li><a href="Carrinho">Carrinho</a></li>
             <li><a href="dashboard">Painel de usuário</a></li>
         <?php elseif($_SESSION['userInfo']['userType']=='admin'): ?>
             <li><a href="dashboard-admin">Painel de Admin</a></li>
