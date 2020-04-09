@@ -20,7 +20,7 @@ class User
 
     public function login($email,$senha) : bool
     {
-        $query = Database::sql("SELECT nome,email,senha FROM Usuarios WHERE email=:email");
+        $query = Database::sql("SELECT nome,email,senha,id FROM Usuarios WHERE email=:email");
         $query->bindParam(':email',$email);
         $query->execute();
         foreach ($query as $row){

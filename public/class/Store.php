@@ -6,7 +6,7 @@ class Store
 {
     //Get the products from Database and show them for users
     public function showProducts() {
-        foreach (Database::sqlFor("SELECT * FROM Produtos") as $row):
+        foreach (Database::sqlFor("SELECT * FROM Produtos WHERE estoque > 0") as $row):
             $row['imagens'] = json_decode($row['imagens']);
     ?>
         <figure class="produto">
@@ -23,7 +23,7 @@ class Store
     }
 
     public function showRandomProducts() {
-        foreach (Database::sqlFor("SELECT * FROM Produtos ORDER BY RAND() LIMIT 3") as $row):
+        foreach (Database::sqlFor("SELECT * FROM Produtos WHERE estoque > 0 ORDER BY RAND() LIMIT 3 ") as $row):
             $row['imagens']= json_decode($row['imagens']);
         ?>
             <div class="destaque">
@@ -47,6 +47,28 @@ class Store
             return $query->fetchObject();
         }
         return False;
+    }
+
+    public function addToCart($produto,$userId){
+        $quantidade = $_GET['quantidade'];
+        $query = Database::sql("INSERT INTO Carrinho (usuario_id, produto_id, quantidade) VALUES(:userId, :produtoId, :quantidade)");
+        $query->bindParam(":userId",$userId);
+        $query->bindParam(":produtoId",$produto->id);
+        $query->bindParam(":quantidade",$quantidade);
+        $query->execute();
+        var_dump($query->errorInfo());
+    }
+
+    public function selectItemsFromCart($userId) : object{
+        $query = Database::sql("SELECT Produtos.nome, Produtos.preco, Produtos.estoque, Carrinho.quantidade
+        FROM Produtos
+            INNER JOIN Carrinho
+            ON Carrinho.produto_id = Produtos.id
+            INNER JOIN Usuarios
+        WHERE Usuarios.id = :userId");
+        $query->bindParam(":userId",$userId);
+        $query->execute();
+        return $query;
     }
 
     /**

@@ -1,19 +1,15 @@
 <?php
-    require ('class/autoload.php');
+require ('class/autoload.php');
     session_start();
     $store = new Store();
     $produto=$store->showProduct($_GET['product_id']);
     $imagens = json_decode($produto->imagens);
+
+    $_SESSION['produto'] = $produto;
 ?>
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?=$produto->nome?></title>
-        <base href="../">
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+    <?php require 'head.php'; ?>
     <body>
         <?php require 'header.php'; ?>
 
@@ -23,15 +19,21 @@
                 <h1><?= $produto->nome ?></h1>
                 <img src="uploads/<?=$imagens[0]?>" height="400" alt="Imagem <?=$produto->nome?>">
                 <p><?=$produto->descricao?></p>
-                
                 <center>
+                    <form action="" method="get">
                     <h2 class="clearfix">Preço:<?=$produto->preco?></h2>
                     <h3 class="clearfix">Estoque: <?=$produto->estoque?></h3>
                     <div id="counter">
                         <label for="quantidade">Quantidade:</label>
-                        <input type="number" id="quantidade" min="1">
-                        <button>Comprar</button>
+                        <input type="number" id="quantidade" min="1" max="<?=$produto->estoque?>" value="0" name="quantidade">
+                        <input type="submit" value="Comprar" <?php ?> >
                     </div>
+                    </form>
+                    <?php 
+                        if(isset($_GET['quantidade'])){
+                                $store->addToCart($produto,$_SESSION['userInfo']['id']);
+                        }
+                    ?>
                 </center>
 
                 <div id="galeria" class="clearfix">
@@ -78,6 +80,7 @@
                         <img src="" alt="">
                     </p>
                 </div> -->
+                
             </div>
         </main>
 
