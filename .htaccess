@@ -8,8 +8,11 @@ RewriteRule ^ %1 [L,NE,R=302]
 RewriteRule ^((?!public/).*)$ ./public/$1 [L,NC]
 
 
-# A Flag [L] funciona como um break E faz regra | script 
-# parar de ser de ser aplicada/executado
+# A Flag [L] funciona como um break E faz regra do script 
+# parar de ser de ser aplicada/executada
+
+
+RewriteRule "^public/api$" "public/class/Api.php" [L]
 
 RewriteRule "^public/dashboard-admin$" "public/dash-admin.php" [L]
 RewriteRule "^public/admin-login$" "public/login-admin.php" [L]
@@ -20,10 +23,8 @@ RewriteRule "^public/registro$" "public/cadastro.php" [L]
 RewriteRule "^public/login$" "public/login-user.php" [L]
 RewriteRule "^public/dashboard$" "public/dash-user.php" [L]
 
-#RewriteRule "^public/produto/(.*)$" "public/product.php?product_id=$1" [L]
-
-#RewriteRule "^public/produto/(\d)[/quantidade/]?" "public/product.php?product_id=$1&quantidade=$2" [L]
 RewriteRule "^public/produto/(\d)(/quantidade/([0-9]+))?$" "public/product.php?product_id=$1&quantidade=$3" [L]
+
 
 
 

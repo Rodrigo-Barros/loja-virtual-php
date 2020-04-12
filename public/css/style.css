@@ -458,3 +458,68 @@ table#carrinho tr td img{
   width: 50px;
   margin-top: 10px;
 }
+
+.produto-removido{
+  background:red;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  margin: 0 0;
+}
+
+/* Carrinho:Modal */
+
+div.modal{
+  position: absolute;
+  left:0;
+  background: rgba(0,0,0,.95);
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  animation: slide-down 3s forwards;
+}
+
+@keyframes slide-down{
+  from{
+    top:-150vh;
+  }
+  to{
+    top:0;
+  }
+}
+
+div.payments{
+  max-width: calc(256px * 4);
+  position: relative;
+  top: 25vh;
+  display: block;
+  margin: 0 auto;
+}
+
+div.payments a{
+  display: block;
+}
+
+div.payments a:first-child img{
+  background: blue;
+}
+
+div.payments a:nth-child(2) img {
+  margin: 0 128px;
+}
+
+div.payments img{
+  max-width:256px;
+  float: left;
+}
+
+.d-none{
+  display: none;
+}
+
+.compra-finalizada{
+  background:blue;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+}

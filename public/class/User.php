@@ -1,6 +1,6 @@
 <?php
 
-require('autoload.php');
+require ('autoload.php');
 class User 
 {
     // Retorn true in case of sucess of query
@@ -24,6 +24,9 @@ class User
         $query->bindParam(':email',$email);
         $query->execute();
         foreach ($query as $row){
+            for($i=0; $i<count($row);$i++){
+                unset($row[$i]);
+            } 
             $cryptPass = $row['senha'];
             $userInfo = $row;
         }

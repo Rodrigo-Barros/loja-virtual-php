@@ -51,7 +51,9 @@ class Store
 
     public function addToCart($produto,$userId){
         $quantidade = $_GET['quantidade'];
-        $query = Database::sql("INSERT INTO Carrinho (usuario_id, produto_id, quantidade) VALUES(:userId, :produtoId, :quantidade)");
+        $query = Database::sql("INSERT INTO Carrinho (usuario_id,produto_id,quantidade)
+        SELECT :userId,:produtoId,:quantidade from dual
+        WHERE NOT EXISTS(SELECT * FROM Carrinho WHERE usuario_id = :userId AND produto_id = :produtoId);");
         $query->bindParam(":userId",$userId);
         $query->bindParam(":produtoId",$produto->id);
         $query->bindParam(":quantidade",$quantidade);
@@ -59,8 +61,18 @@ class Store
         var_dump($query->errorInfo());
     }
 
-    public function selectItemsFromCart($userId) : object{
-        $query = Database::sql("SELECT Produtos.nome, Produtos.preco, Produtos.estoque, Produtos.imagens,
+    public function removeFromCart($productId,$userId):bool
+    {
+        $query = Database::sql("DELETE FROM Carrinho WHERE usuario_id=:userId AND produto_id=:produtoId");
+        $query->bindParam(":userId",$userId);
+        $query->bindParam(":produtoId",$productId);
+        $sql_status=$query->execute();
+        return $sql_status;
+    }
+
+    public function selectItemsFromCart($userId) : object
+    {
+        $query = Database::sql("SELECT Produtos.id, Produtos.nome, Produtos.preco, Produtos.estoque, Produtos.imagens,
             Carrinho.quantidade
         FROM Carrinho
 	        INNER JOIN Produtos
@@ -85,20 +97,35 @@ class Store
      * return a boolean with the status of operation
      * return always true to default payment type.
      */
-    public function payment(string $paymentType="default"){
+    // public function payment(string $paymentType="default"): bool
+    // {
+    //     switch ($paymentType) {
+    //         case 'pagSeguro':
+                
+    //             break;
 
-    }
+    //         case 'mercadoPago':
+            
+    //         break; 
+            
+    //         default:
+    //             // Selecionar TUDO DE Carinnho;
+    //             // Atualizar a tabela de produtos decrementado os produtos de lá
+    //             $query = Database::sql("UPDATE Table SET ");
+    //             break;
+    //     }
+    // }
 
     //For Rating system
-    public function setProductNote($user_id,$product_id,$note){
+    public function setProductNote($userId,$productId,$note){
 
     }
 
-    public function letComment($user_id,$product_id,$comment){
+    public function letComment($userId,$productId,$comment){
 
     }
 
-    public function checkIfUserOrderedBeforeComment($user_id,$product_id): bool {
+    public function checkIfUserOrderedBeforeComment($userId,$productId): bool {
         return True;
     }
 
