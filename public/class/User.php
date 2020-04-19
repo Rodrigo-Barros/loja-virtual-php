@@ -66,4 +66,28 @@ class User
         
 
     }
+
+    public function listarPedidos($userId)
+    {
+        $pedidos = Database::sql("SELECT id, status_pedido FROM Pedidos WHERE Pedidos.usuario_id = :userId");
+        $pedidos->bindParam(':userId', $userId);
+        $pedidos->execute();
+        return $pedidos;
+    }
+
+    //For Rating system
+    public function setProductNote($userId,$productId,$note)
+    {
+
+    }
+
+    public function letComment($userId,$productId,$comment)
+    {
+
+    }
+
+    public function checkIfUserOrderedBeforeComment($userId,$productId): bool 
+    {
+        return True;
+    }
 }

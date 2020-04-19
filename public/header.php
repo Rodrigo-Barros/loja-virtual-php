@@ -12,6 +12,8 @@
         <?php elseif($_SESSION['userInfo']['userType']=='user'): ?>
             <li><a href="Carrinho">Carrinho</a></li>
             <li><a href="dashboard">Painel de usuário</a></li>
+            <li><a href="logout.php">sair</a></li>
+            
         <?php elseif($_SESSION['userInfo']['userType']=='admin'): ?>
             <li><a href="dashboard-admin">Painel de Admin</a></li>
         <?php endif;?>

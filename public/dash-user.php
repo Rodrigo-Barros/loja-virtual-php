@@ -1,9 +1,14 @@
-<?php 
-    require('class/autoload.php');
+<?php
+
+use function PHPSTORM_META\type;
+
+require('class/autoload.php');
     session_start();
     if( isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']!=='user') {
         header("Location:public/");
-    };
+    }
+    $user = new User;
+    $pedidos = $user->listarPedidos($_SESSION['userInfo']['id']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,11 +19,11 @@
     <link rel="stylesheet" href="css/dash-user.css">
 </head>
 <body>
-<nav id="top-menu">
+    <nav id="top-menu">
         <ul id="top-menu-left">
             <li><a href="/ecommerce" title="Leva a página incial">Ecommerce</a></li>
             <li><a href="#pedidos" title="Acompanhamento do adamento dos Produtos">Pedidos</a></li>
-            
+            <li><a href="/ecommerce/Carrinho">Carrinho</a></li>
         </ul>
 
         <ul id="top-menu-right">
@@ -40,17 +45,30 @@
             <table>
                 <thead>
                     <th>ID do pedido</th>
-                    <th>descrição</th>
-                    <th>Preço do pedido</th>
-                    <th>Ação</th>
+                    <th>Status</th>
+                    <th>Ações</th>
                 </thead>
                 <tbody>
-                    <tr>
+                    <!-- <tr>
                         <td>1</td>
                         <td>1 televisão, 2 smarth phones</td>
                         <td>799,99</td>
                         <td><a href="#">Mais Detalhes</a></td>
-                    </tr>
+                    </tr> -->
+                    <?php 
+                    foreach ($pedidos as $pedido):
+                        
+                        ?>  
+                            <tr>
+                                <td ><?=$pedido['id']?></td>
+                                <td ><?=($pedido['status_pedido'])==1? "Finalizado": "Processando" ?></td>
+                                <td><a href="pedido/<?=$pedido['id']?>">Mais Detalhes</a></td>
+                            </tr>
+
+                        <?php
+                        
+                    endforeach;
+                    ?>
                 </tbody>
             </table>
         </div>

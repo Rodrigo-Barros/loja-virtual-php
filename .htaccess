@@ -25,6 +25,7 @@ RewriteRule "^public/dashboard$" "public/dash-user.php" [L]
 
 RewriteRule "^public/produto/(\d)(/quantidade/([0-9]+))?$" "public/product.php?product_id=$1&quantidade=$3" [L]
 
+RewriteRule "^public/pedido/([0-9]+)$" "public/detalhes-pedido.php?pedidoId=$1" [L]
 
 
 

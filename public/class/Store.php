@@ -58,7 +58,7 @@ class Store
         $query->bindParam(":produtoId",$produto->id);
         $query->bindParam(":quantidade",$quantidade);
         $query->execute();
-        var_dump($query->errorInfo());
+        // var_dump($query->errorInfo());
     }
 
     public function removeFromCart($productId,$userId):bool
@@ -81,52 +81,6 @@ class Store
         $query->bindParam(":userId",$userId);
         $query->execute();
         return $query;
-    }
-
-    /**
-     * Select Payment Type to finish Order
-     * 
-     * @param paymentType string
-     * 
-     * Receive a payment type could be
-     * default -> generates a order without intermediares
-     * pagseguro | mercadoPago -> uses a Api to finish the payment
-     * 
-     * @return bool
-     * 
-     * return a boolean with the status of operation
-     * return always true to default payment type.
-     */
-    // public function payment(string $paymentType="default"): bool
-    // {
-    //     switch ($paymentType) {
-    //         case 'pagSeguro':
-                
-    //             break;
-
-    //         case 'mercadoPago':
-            
-    //         break; 
-            
-    //         default:
-    //             // Selecionar TUDO DE Carinnho;
-    //             // Atualizar a tabela de produtos decrementado os produtos de lá
-    //             $query = Database::sql("UPDATE Table SET ");
-    //             break;
-    //     }
-    // }
-
-    //For Rating system
-    public function setProductNote($userId,$productId,$note){
-
-    }
-
-    public function letComment($userId,$productId,$comment){
-
-    }
-
-    public function checkIfUserOrderedBeforeComment($userId,$productId): bool {
-        return True;
     }
 
 }

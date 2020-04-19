@@ -6,9 +6,9 @@ function updateProductImage(image){
 }
 
 
-function addToCart(){
+function addToCart(productId){
     quantidade = document.querySelector('#counter input').value;
-    window.location.href = window.location.href + '/quantidade/' + quantidade;
+    window.location.href = window.location.origin + '/ecommerce/produto/' + productId + '/quantidade/' + quantidade;
 }
 
 // Carrinho
@@ -49,6 +49,13 @@ function listProducts(paymentType){
             'quantidade':parseInt(rows[i].children[1].children[0].value)
         });
     }
+
+    // Cancela o pedido caso o carrinho esteja vazio
+    if ( produtos.length == 0){
+        return;
+    }
+
+    // console.log(produtos);
 
     var request = new XMLHttpRequest();
     

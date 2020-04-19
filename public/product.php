@@ -5,7 +5,7 @@ require ('class/autoload.php');
     $produto=$store->showProduct($_GET['product_id']);
     $imagens = json_decode($produto->imagens);
 
-    $_SESSION['produto'] = $produto;
+    // $_SESSION['produto'] = $produto;
 ?>
 
 <html>
@@ -26,7 +26,7 @@ require ('class/autoload.php');
                     <div id="counter">
                         <label for="quantidade">Quantidade:</label>
                         <input type="number" id="quantidade" min="1" max="<?=$produto->estoque?>" value="0" name="quantidade">
-                        <button onclick="addToCart()" <?php echo (isset($_SESSION['userInfo'])==False) ? "disabled" : "" ; ?>>Comprar</button>
+                        <button onclick="addToCart(<?=$produto->id?>)" <?php echo (isset($_SESSION['userInfo'])==False) ? "disabled" : "" ; ?>>Comprar</button>
                         
                     </div>
 
