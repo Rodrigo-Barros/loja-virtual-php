@@ -1,15 +1,18 @@
-<?php 
+<?php
     require 'class/autoload.php';
     session_start();
     if( isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']!=='user') {
         header("Location:/ecommerce/public/logout.php");
     }
-    $pedidos = Database::sql("SELECT Pedidos.id, Produtos.nome, Produtos.preco, itemPedido.quantidade
+    $pedidos = Database::sql("SELECT Pedidos.id, Produtos.nome as produto, Produtos.preco, itemPedido.quantidade,
+    Usuarios.nome as user, Usuarios.endereco, Usuarios.estado, Usuarios.cidade, Usuarios.cep, Usuarios.bairro
     FROM Pedidos
         INNER JOIN itemPedido
         ON itemPedido.idPedido = Pedidos.id
         INNER JOIN Produtos
         ON itemPedido.idProduto = Produtos.id
+        INNER JOIN Usuarios
+        ON Usuarios.id = Pedidos.usuario_id
     WHERE Pedidos.usuario_id = :userId AND Pedidos.id = :pedidoId");
     $pedidos->bindParam(':userId',$_SESSION['userInfo']['id']);
     $pedidos->bindParam('pedidoId',$_GET['pedidoId']);
@@ -54,20 +57,24 @@
                 <th>Subtotal</th>
             </thead>
             <tbody>
-            <?php 
+            <?php
                 foreach($pedidos as $pedido):
                     $total += $pedido['quantidade'] * $pedido['preco'];
-            ?>  
+            ?>
             <tr>
-                <td><?=$pedido['nome']?></td>
+                <td><?=$pedido['produto']?></td>
                 <td><?=number_format($pedido['preco'],2,',','.')?></td>
                 <td><?=$pedido['quantidade']?></td>
                 <td>R$ <?=number_format($pedido['quantidade'] * $pedido['preco'],2,',','.')?></td>
             </tr>
-                
-            <?php 
+
+            <?php
                 endforeach;
+                $pedidos->execute();
+                $pedidoInfo = $pedidos->fetchObject();
             ?>
+
+
 
             <tr>
                 <td colspan="3" style="text-align:right;border:unset">Total:</td>
@@ -75,5 +82,15 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="user-info">
+          <p>Destinatario: <?=$pedidoInfo->user?></p>
+          <p>Estado: <?=$pedidoInfo->estado?></p>
+          <p>Cidade: <?=$pedidoInfo->cidade?></p>
+          <p>Bairro: <?=$pedidoInfo->bairro?></p>
+          <p>Endereco: <?=$pedidoInfo->endereco?></p>
+          <p>CEP: <?=$pedidoInfo->cep?></p>
+          <p>Cidade: <?=$pedidoInfo->cidade?></p>
+        </div>
     </body>
 </html>

@@ -35,10 +35,10 @@ require('class/autoload.php');
                     <a href="#editar" title="Permite modificar dados da sua conta como senha entre outras opções">editar</a>
                 </li>
                 <li><a href="logout.php" title="Encerra sua sessão">sair</a></li>
-            </ul>    
+            </ul>
         </ul>
     </nav>
-    
+
     <div id="paginas">
         <div id="pedidos">
             <h1>Pedidos</h1>
@@ -55,10 +55,10 @@ require('class/autoload.php');
                         <td>799,99</td>
                         <td><a href="#">Mais Detalhes</a></td>
                     </tr> -->
-                    <?php 
+                    <?php
                     foreach ($pedidos as $pedido):
-                        
-                        ?>  
+
+                        ?>
                             <tr>
                                 <td ><?=$pedido['id']?></td>
                                 <td ><?=($pedido['status_pedido'])==1? "Finalizado": "Processando" ?></td>
@@ -66,7 +66,7 @@ require('class/autoload.php');
                             </tr>
 
                         <?php
-                        
+
                     endforeach;
                     ?>
                 </tbody>
@@ -78,7 +78,7 @@ require('class/autoload.php');
                 $userInfo = new User();
                 $field = $userInfo->getUserInfo();
             ?>
-            <form action="" method="post" class="dados">
+            <form action="atualizar_dados_user.php" method="post" class="dados">
                 <label for="nome">Nome Completo:</label>
                 <input id="nome" type="text" name="nome" value="<?=$field->nome?>">
 
@@ -87,7 +87,7 @@ require('class/autoload.php');
 
                 <label for="current-pass">Senha:</label>
                 <input name="current-pass" id="current-pass" type="password">
-                
+
                 <label for="estado">Estado:</label>
                 <select name="estado" id="estado" required name="estado">
                     <option value="">Escolha seu Estado</option>

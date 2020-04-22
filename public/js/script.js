@@ -34,7 +34,7 @@ function listProducts(paymentType,requestType='GET'){
 
     var rows = document.querySelectorAll('tbody tr');
     var apiUrl = document.location.origin + '/ecommerce/api';
-    if (paymentType = 'mercadoPago'){
+    if (paymentType == 'mercadoPago'){
       var formSend = {
         'total'  : document.querySelector('#transaction_amount').value,
         'token'  : document.querySelector('input[name="token"]').value,

@@ -536,9 +536,17 @@ div.payments img{
   display: none;
 }
 
+/* Detalhes do Pedido */
+
+.user-info{
+  margin: 15px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 20px;
+}
+
 /* Mobile */
 @media screen and (max-width:768px){
-
 
   .banner{
       flex-direction: column;

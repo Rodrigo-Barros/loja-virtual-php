@@ -10,7 +10,7 @@
 <body>
     <form method="post" class="login-user">
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required> 
+        <input type="email" name="email" id="email" required>
 
         <label for="password">Senha:</label>
         <input type="password" name="password" id="password" required>
@@ -18,13 +18,13 @@
         <input type="submit" value="Enviar">
     </form>
 
-    <?php 
+    <?php
     if( isset($_POST['email']) && isset($_POST['password']) ):
         $user=new User();
         $canLogin=$user->login($_POST['email'],$_POST['password']);
-        if ($canLogin ===True): header("Location:dashboard");
+        if ($canLogin ===True): header("Location:public/");
         else:
-    ?>  
+    ?>
         <center>
             <p>Email ou Senha incorretos por favor verique e tente novamente</p>
         </center>
@@ -32,7 +32,7 @@
         endif;
     endif;
     ?>
-    
+
 
 </body>
 </html>

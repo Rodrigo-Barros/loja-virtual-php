@@ -1,7 +1,7 @@
 <?php
 
 require ('autoload.php');
-class User 
+class User
 {
     // Retorn true in case of sucess of query
     public function createUser($email,$senha,$nome) : bool
@@ -14,8 +14,8 @@ class User
         session_start();
         $_SESSION['userInfo']['email'] = $email;
         $_SESSION['userInfo']['nome'] = $nome;
-        $_SESSION['userInfo']['userType'] = 'normal';
-        return $query->execute(); 
+        $_SESSION['userInfo']['userType'] = 'user';
+        return $query->execute();
     }
 
     public function login($email,$senha) : bool
@@ -26,12 +26,12 @@ class User
         foreach ($query as $row){
             for($i=0; $i<count($row);$i++){
                 unset($row[$i]);
-            } 
+            }
             $cryptPass = $row['senha'];
             $userInfo = $row;
         }
-        if (password_verify($senha,$cryptPass)) 
-        { 
+        if (password_verify($senha,$cryptPass))
+        {
             unset($userInfo['senha'],$cryptPass);
             session_start();
             $_SESSION['userInfo'] = $userInfo;
@@ -41,29 +41,25 @@ class User
         return False;
     }
 
-    // Used to update all user info from user dashboard
-    // section
-    public function updateInfo()
-    {
-        
-    }
+
 
     // To fill user fields
-    
+
     public function getUserInfo() : object
     {
         // session_start();
         if (isset($_SESSION['userInfo']['email'])){
             $email = $_SESSION['userInfo']['email'];
-            $query = Database::sql("SELECT nome,email,bairro,cidade,nascimento,estado,telefone,cep,endereco
-                    FROM Usuarios WHERE email = :email");
+            $query = Database::sql("SELECT nome,email,bairro,cidade,nascimento,estado,telefone,
+              cep,endereco,nascimento
+              FROM Usuarios WHERE email = :email");
             $query->bindParam(":email",$_SESSION['userInfo']['email']);
             $query->execute();
             return $query->fetchObject();
         }else{
             return '{}';
         }
-        
+
 
     }
 
@@ -81,13 +77,13 @@ class User
 
     }
 
-    public function letComment($userId,$productId,$comment)
+    public function letComment($userId,$productId,$comment,$rate)
     {
 
     }
 
-    public function checkIfUserOrderedBeforeComment($userId,$productId): bool 
+    public function checkIfUserOrderedBeforeComment($userId,$productId): bool
     {
-        return True;
+        return False;
     }
 }
