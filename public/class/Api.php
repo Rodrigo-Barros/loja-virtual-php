@@ -21,7 +21,7 @@ class Api
             case 'GET':
                 $this->getFunctionsHandler(new Method);
                 break;
-            
+
             default:
                 # code...
                 echo "Método não implementado na API";
@@ -37,7 +37,6 @@ class Api
                 case 'finalizar_pedido':
                     $method->finishOrder($_GET['finalizar_pedido'], $_GET['userId'], $_GET['productInfo']);
                     break;
-
 
                 default:
                     continue;
@@ -62,28 +61,32 @@ class Api
 class Method
 {
     public function finishOrder($type, $userId, $productInfo)
-    {   
+    {
+
+        $produtos = json_decode($productInfo,$assoc=True);
+
+
         // Converter o json para PHP
         $produtos = json_decode($productInfo,$assoc=True);
-        
+
         // Inserir Pedido na tabela correspondente
         $Pedidos = Database::sql("INSERT INTO Pedidos (usuario_id,status_pedido) VALUES (:userId,1)");
         $Pedidos->bindParam(':userId', $userId);
         $Pedidos->execute();
-        
+
         // Insere os pedidos na Tabelas Item Pedidos e Atualiza o estoque
         $pedidoId=Database::sql("SELECT id FROM Ecommerce.Pedidos ORDER BY id desc LIMIT 1");
         $pedidoId->execute();
         $pedidoId=$pedidoId->fetchObject();
         foreach ($produtos as $produto){
-            $tableProdutos = Database::sql("INSERT INTO itemPedido (idPedido, idProduto, quantidade, preco) 
+            $tableProdutos = Database::sql("INSERT INTO itemPedido (idPedido, idProduto, quantidade, preco)
                 VALUES (:idPedido, :idProduto, :quantidade, :preco)");
             $tableProdutos->bindParam(':idPedido', $pedidoId->id);
             $tableProdutos->bindParam(':idProduto', $produto['produto_id']);
             $tableProdutos->bindParam(':quantidade', $produto['quantidade']);
             $tableProdutos->bindParam(':preco', $produto['preco_unitario']);
             if ($tableProdutos->execute()){
-                echo "Pedidos adicionados na tabela itemPedido";
+                echo "Pedidos adicionados na tabela itemPedido \n";
             }else{
                 var_dump( $tableProdutos->errorInfo() );
             }
@@ -99,6 +102,37 @@ class Method
         $carrinho->bindParam(':userId',$userId);
         $carrinho->execute();
 
+        if($type == 'mercadoPago'){
+          $accessToken = 'TEST-8864676676772087-041722-7ef8cc5db28f3f3fce77e4b05395c34e-194214343';
+          $publicKey = 'TEST-4c9ca35f-f253-41bb-8b63-e056cea62dcd';
+          var_dump($this->curlRequest("https://api.mercadopago.com/v1/payments?access_token=$accessToken", "POST" , [
+            "transaction_amount" => floatval($_GET['total']),
+            "token" => $_GET['token'],
+            "description" => "Teste de pagamento pela API",
+            "installments" => 1, // parcelas do pagamento
+            "payment_method_id" => $_GET['payment_method_id'],
+            "payer" => [
+              "email" => 'test@test.com'
+            ]
+          ]));
+        }
+
+    }
+
+    public function curlRequest(string $url, string $method, array $params){
+      $cr = curl_init();
+      curl_setopt_array($cr, [
+        CURLOPT_URL => $url,
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_POSTFIELDS => json_encode($params),
+        CURLOPT_RETURNTRANSFER => TRUE
+      ]);
+
+      $response = curl_exec($cr);
+
+      if (!$response) echo "Erro: " . curl_error($cr);
+      curl_close($cr);
+      return $response;
     }
 
 }

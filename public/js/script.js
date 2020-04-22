@@ -21,15 +21,27 @@ document.querySelector('a.finish-order').onclick = function(){
     document.querySelector('div.modal').style.visibility='visible';
 }
 
+document.querySelector('#mercadoPago img').onclick = function(){
+  document.querySelector('.mercadoPago').style.display='block';
+}
 
 
 function finalizarPedido(metodoDePagamento){
     listProducts(metodoDePagamento);
 }
 
-function listProducts(paymentType){
+function listProducts(paymentType,requestType='GET'){
+
     var rows = document.querySelectorAll('tbody tr');
     var apiUrl = document.location.origin + '/ecommerce/api';
+    if (paymentType = 'mercadoPago'){
+      var formSend = {
+        'total'  : document.querySelector('#transaction_amount').value,
+        'token'  : document.querySelector('input[name="token"]').value,
+        'payment': document.querySelector('#payment_method_id').value,
+      }
+      apiUrl = document.location.origin + '/ecommerce/class/Api.php';
+    }
     //Only for debug
     // var args = {
     //     "finalizar_pedido" : "default",
@@ -58,7 +70,7 @@ function listProducts(paymentType){
     // console.log(produtos);
 
     var request = new XMLHttpRequest();
-    
+
     request.onreadystatechange = async function (){
         // console.log(this.status);
         if (this.status == 200 && this.readyState==4 ){
@@ -69,8 +81,14 @@ function listProducts(paymentType){
 
     getParams = '?finalizar_pedido=' + paymentType + '&userId=' + userId;
     getParams += '&productInfo=' + JSON.stringify(produtos);
+    if(paymentType == 'mercadoPago')
+    {
+      getParams += '&token=' + formSend.token + '&payment_method_id=' + formSend.payment;
+      getParams += '&total=' + parseInt(formSend.total);
+    }
 
-    request.open('GET',apiUrl +  getParams);
+
+    request.open(requestType,apiUrl +  getParams);
     request.send();
     console.log(request);
     document.querySelector('p.produto-removido.d-none').style.display="block";
