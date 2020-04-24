@@ -10,7 +10,7 @@ class Api
     public function __construct()
     {
         $this->request = $_SERVER['REQUEST_METHOD'];
-        $this->args = $_GET;
+        $this->args = $_REQUEST;
     }
 
     public function requestHandler()
@@ -21,6 +21,10 @@ class Api
             case 'GET':
                 $this->getFunctionsHandler(new Method);
                 break;
+
+            case 'POST':
+              $this->postFunctionsHandler(new Method);
+              break;
 
             default:
                 # code...
@@ -36,13 +40,28 @@ class Api
             switch($arg){
                 case 'finalizar_pedido':
                     $method->finishOrder($_GET['finalizar_pedido'], $_GET['userId'], $_GET['productInfo']);
-                    break;
+                    return;
 
                 default:
-                    continue;
-                    break;
+                    echo 'rota não implementada';
+                    return;
             }
         }
+    }
+
+    public function postFunctionsHandler(Method $method)
+    {
+      forEach ($this->args as $arg=>$key){
+          switch($arg){
+              case 'post-comment':
+                  $method->letComment($_POST['userId'], $_POST['productId'], $_POST['comment'], $_POST['note']);
+                  return;
+
+              default:
+                  echo 'rota não implementada';
+                  return;
+          }
+      }
     }
 
     public function debug($enabled=true)
@@ -133,6 +152,27 @@ class Method
       if (!$response) echo "Erro: " . curl_error($cr);
       curl_close($cr);
       return $response;
+    }
+
+    public function letComment($userId,$productId,$comment,$note)
+    {
+      $query= Database::sql("INSERT INTO Avaliacoes (idUsuario, idProduto, comentario, nota)
+        VALUES (:userId, :productId, :comment, :note)");
+      $query->bindParam(':userId',$userId);
+      $query->bindParam(':productId',$productId);
+      $query->bindParam(':comment',$comment);
+      $query->bindParam(':note',$note);
+      if ($query->execute()==False){
+        $query->errorInfo();
+      }
+      else{
+        session_start();
+        $response = json_encode([
+          "userName" => $_SESSION['userInfo']['nome'],
+          "comment" => $comment
+        ]);
+        echo $response;
+      }
     }
 
 }

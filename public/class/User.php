@@ -1,6 +1,7 @@
 <?php
 
 require ('autoload.php');
+ini_set('display_errors',1);
 class User
 {
     // Retorn true in case of sucess of query
@@ -71,19 +72,37 @@ class User
         return $pedidos;
     }
 
-    //For Rating system
-    public function setProductNote($userId,$productId,$note)
+
+
+    public function checkIfUserOrderedBeforeComment($userId=12,$productId=7) : bool
+    // itemPedido.id itemPedido.idProduto itemPedido.idPedido
+    // Pedidos.id, Pedidos.usuario_id
     {
+        $produto = Database::sql("SELECT DISTINCT itemPedido.idProduto FROM Pedidos
+	         INNER JOIN Usuarios
+	          ON Usuarios.id = Pedidos.usuario_id
+            INNER JOIN itemPedido
+           WHERE Usuarios.id = :userId AND itemPedido.idProduto = :productId");
 
-    }
 
-    public function letComment($userId,$productId,$comment,$rate)
-    {
+        $produto->bindParam(':userId', $userId);
+        $produto->bindParam(':productId',$productId);
+        $query_sts=$produto->execute();
+        if($query_sts==False){
+          var_dump($produto->errorInfo());
 
-    }
+          $query_sts == False;
+        }elseif ($produto->rowCount() == 0) {
+          $query_sts = False;
+        }
+        elseif ($query_sts && $produto->rowCount() > 0) {
+          $query_sts = True;
+        }
 
-    public function checkIfUserOrderedBeforeComment($userId,$productId): bool
-    {
-        return False;
+        // echo "<pre>";
+        // print_r($produto->fetchAll(PDO::FETCH_ASSOC));
+        // echo "<pre>";
+        return $query_sts;
+
     }
 }

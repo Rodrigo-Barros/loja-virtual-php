@@ -94,3 +94,25 @@ function listProducts(paymentType,requestType='GET'){
     document.querySelector('p.produto-removido.d-none').style.display="block";
     // console.log(produtos);
 }
+
+// Página de Produto
+
+const form = document.querySelector('#let-comment');
+form.onsubmit = function(e){
+  e.preventDefault();
+  fetch('api?post-comment',{method:'POST',body:new FormData(form)}).then(function(response){
+    response.text().then(function(result){
+      const responseApi = JSON.parse(result);
+      const comment = `<div class="comment-section clearfix">
+          <p class="comment">
+          <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/user-512.png" alt="">
+              ${responseApi.userName} says:
+              <span class="comment-content">${responseApi.comment}</span>
+          </p>
+
+      </div>`;
+      document.querySelector('#comentarios').insertAdjacentHTML('beforeend',comment);
+      window.scrollTo(0,document.body.scrollHeight);
+    })
+  })
+}

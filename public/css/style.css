@@ -346,6 +346,8 @@ div#produto div#counter input{
   margin: 0 auto;
   border-radius: 10px;
   margin-top: 20px;
+  font-size: 1.2em;
+  padding: 10px;
 }
 
 #let-comment button{
@@ -358,6 +360,23 @@ div#produto div#counter input{
   margin: 20px auto;
   display: block;
 }
+ #let-comment input[type='range']{
+   display: block;
+   margin: 0 auto;
+   width: 700px;
+ }
+ #let-comment p{
+   text-align: center;
+ }
+
+#let-comment button:disabled,
+#let-comment textarea:disabled,
+#let-comment input[type="range"]:disabled{
+  opacity:0.65;
+  cursor: not-allowed;
+}
+
+
 
 #counter a{
   text-decoration: none;
