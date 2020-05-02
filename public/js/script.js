@@ -13,18 +13,23 @@ function addToCart(productId){
 
 // Carrinho
 
-document.querySelector('div.modal').onclick = function(){
-    this.style.visibility = 'hidden';
-}
+if(
+  window.location.href.split('/').pop() == 'Carrinho' ||
+  window.location.href.split('/').pop().match(/Carrinho\?delete_produto=\d+/) != null
+  )
+  {
+  document.querySelector('div.modal').onclick = function(){
+      this.style.visibility = 'hidden';
+  }
 
-document.querySelector('a.finish-order').onclick = function(){
-    document.querySelector('div.modal').style.visibility='visible';
-}
+  document.querySelector('a.finish-order').onclick = function(){
+      document.querySelector('div.modal').style.visibility='visible';
+  }
 
-document.querySelector('#mercadoPago img').onclick = function(){
-  document.querySelector('.mercadoPago').style.display='block';
+  document.querySelector('#mercadoPago img').onclick = function(){
+    document.querySelector('.mercadoPago').style.display='block';
+  }
 }
-
 
 function finalizarPedido(metodoDePagamento){
     listProducts(metodoDePagamento);
@@ -62,7 +67,7 @@ function listProducts(paymentType,requestType='GET'){
         });
     }
 
-    // Cancela o pedido caso o carrinho esteja vazio
+    // Cancela o pedido caso o carrinhoPreço unitário esteja vazio
     if ( produtos.length == 0){
         return;
     }
@@ -81,6 +86,7 @@ function listProducts(paymentType,requestType='GET'){
 
     getParams = '?finalizar_pedido=' + paymentType + '&userId=' + userId;
     getParams += '&productInfo=' + JSON.stringify(produtos);
+
     if(paymentType == 'mercadoPago')
     {
       getParams += '&token=' + formSend.token + '&payment_method_id=' + formSend.payment;
@@ -96,8 +102,7 @@ function listProducts(paymentType,requestType='GET'){
 }
 
 // Página de Produto
-
-const form = document.querySelector('#let-comment');
+const form = document.querySelector('#let-comment') || 'none';
 form.onsubmit = function(e){
   e.preventDefault();
   fetch('api?post-comment',{method:'POST',body:new FormData(form)}).then(function(response){
@@ -106,7 +111,7 @@ form.onsubmit = function(e){
       const comment = `<div class="comment-section clearfix">
           <p class="comment">
           <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/user-512.png" alt="">
-              ${responseApi.userName} says:
+              ${responseApi.userName} disse:
               <span class="comment-content">${responseApi.comment}</span>
           </p>
 

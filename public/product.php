@@ -17,6 +17,10 @@ require ('class/autoload.php');
       WHERE Avaliacoes.idProduto = :idProduto");
     $comments->bindParam(':idProduto',$produto->id);
     $comments->execute();
+    $nota = Database::sql("SELECT AVG(nota) as nota FROM Avaliacoes WHERE idProduto = :idProduto");
+    $nota->bindParam(':idProduto',$produto->id);
+    $nota->execute();
+    $nota = $nota->fetch(PDO::FETCH_OBJ);
 ?>
 
 <html>
@@ -28,6 +32,7 @@ require ('class/autoload.php');
             <div id="produto">
 
                 <h1><?= $produto->nome ?></h1>
+                <h4 style="display:block; width:90%;margin-left:15px">nota: <?=$nota->nota?></h4>
                 <img src="uploads/<?=$imagens[0]?>" height="400" alt="Imagem <?=$produto->nome?>">
                 <p><?=$produto->descricao?></p>
                 <center>
@@ -84,7 +89,7 @@ require ('class/autoload.php');
                   <div class="comment-section">
                       <p class="comment">
                       <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/user-512.png" alt="">
-                          <?=$comment['nome']?> says:
+                          <?=$comment['nome']?> disse:
                           <span class="comment-content"><?=$comment['comentario']?></span>
                       </p>
                   </div>

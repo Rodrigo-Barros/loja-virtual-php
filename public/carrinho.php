@@ -15,6 +15,7 @@
     <?php require 'header.php'; ?>
 
     <main>
+        <p class="produto-removido d-none compra-finalizada" >Compra Finalizada</p>
         <table id="carrinho">
             <thead>
                 <th>Produto</th>
@@ -39,7 +40,6 @@
                         if($del_sts):
                     ?>
                         <p class="produto-removido">Produto Removido do Carrinho</p>
-                        <form action="">
                     <?php
                         endif;
                     }
@@ -63,10 +63,10 @@
                 ?>
 
                 <!-- Não alterar essa linha -->
-                <tr><td colspan="4">Total: R$ <?=number_format($total, 2,',','.')?></td></tr>
+                <tr><td colspan="4">Total: R$ <?=number_format($total, 2,',','.');?></td></tr>
             </tbody>
         </table>
-        <p class="produto-removido d-none compra-finalizada" >Compra Finalizada</p>
+
         <a class="finish-order" href="javascript:void(0)">Finalizar Pedido</a>
 
         <div class="modal">
@@ -133,7 +133,6 @@
             </fieldset>
         </form>
         </div>
-
     </main>
 
     <footer></footer>

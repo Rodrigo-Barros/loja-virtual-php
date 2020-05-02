@@ -7,6 +7,24 @@ body, ul , li, h1{
     list-style: none;
 }
 
+table, th, td{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.table-scrollY {
+  display: block;
+  width: 300px;
+  height: 50%;
+  overflow-y: auto;
+}
+
+table td{
+  text-align: center;
+}
+
+
+
 ul li:hover a{
     background: var(--dash-admin-hover-bg);
     color:var(--dash-admin-hover-text) !important;
@@ -14,7 +32,7 @@ ul li:hover a{
 
 #top-menu{
     display: flex;
-    position: fixed;    
+    position: fixed;
     top:0;
     width: 100%;
     flex-direction: row;
@@ -24,15 +42,15 @@ ul li:hover a{
 }
 ul#top-menu-left li a {padding: 0 10px;}
 ul#top-menu-left li a,
-ul#top-menu-left li{ 
-    display: block; 
+ul#top-menu-left li{
+    display: block;
     text-decoration: none;
     color: var(--text-light);
 }
 
 ul#top-menu-left li{
     float: left;
-    
+
     line-height: 50px;
 }
 
@@ -47,7 +65,7 @@ ul#top-menu-right li a{
 ul#top-menu-right  ul { visibility: hidden;}
 
 ul#top-menu-right li:hover ~ ul,
-ul#top-menu-right  ul:hover{ 
+ul#top-menu-right  ul:hover{
     visibility: visible;
     background: var(--dash-admin-menu-top-bg);
 }
@@ -60,20 +78,6 @@ div#produtos,div#pedidos,div#usuarios{
 
 div#editar { height: calc(100vh)}
 
-div#paginas div h1{    
+div#paginas div h1{
     padding-top:50px;
-} 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

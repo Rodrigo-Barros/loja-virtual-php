@@ -89,8 +89,29 @@ class Method
         $produtos = json_decode($productInfo,$assoc=True);
 
         // Inserir Pedido na tabela correspondente
-        $Pedidos = Database::sql("INSERT INTO Pedidos (usuario_id,status_pedido) VALUES (:userId,1)");
+        $idPagamento='default';
+        if($type == 'mercadoPago'){
+          $accessToken = 'TEST-8864676676772087-041722-7ef8cc5db28f3f3fce77e4b05395c34e-194214343';
+          $publicKey = 'TEST-4c9ca35f-f253-41bb-8b63-e056cea62dcd';
+          $MPResponse = $this->curlRequest("https://api.mercadopago.com/v1/payments?access_token=$accessToken", "POST" , [
+            "transaction_amount" => floatval($_GET['total']),
+            "token" => $_GET['token'],
+            "description" => "Teste de pagamento pela API",
+            "installments" => 1, // parcelas do pagamento
+            "payment_method_id" => $_GET['payment_method_id'],
+            "payer" => [
+              "email" => 'teste@email.com'
+            ]
+          ]);
+          $response =  json_decode($MPResponse);
+          // echo $response;
+          $idPagamento = $response->id;
+        }
+        $meioDePagamento = ($type == 'mercadoPago') ? 'mercadoPago' : 'default';
+        $Pedidos = Database::sql("INSERT INTO Pedidos (usuario_id,status_pedido, meio_pagamento,idPagamento) VALUES (:userId,1,:meioPagamento,:idPagamento)");
         $Pedidos->bindParam(':userId', $userId);
+        $Pedidos->bindParam(':meioPagamento', $meioDePagamento);
+        $Pedidos->bindParam(':idPagamento',$idPagamento);
         $Pedidos->execute();
 
         // Insere os pedidos na Tabelas Item Pedidos e Atualiza o estoque
@@ -121,20 +142,7 @@ class Method
         $carrinho->bindParam(':userId',$userId);
         $carrinho->execute();
 
-        if($type == 'mercadoPago'){
-          $accessToken = 'TEST-8864676676772087-041722-7ef8cc5db28f3f3fce77e4b05395c34e-194214343';
-          $publicKey = 'TEST-4c9ca35f-f253-41bb-8b63-e056cea62dcd';
-          var_dump($this->curlRequest("https://api.mercadopago.com/v1/payments?access_token=$accessToken", "POST" , [
-            "transaction_amount" => floatval($_GET['total']),
-            "token" => $_GET['token'],
-            "description" => "Teste de pagamento pela API",
-            "installments" => 1, // parcelas do pagamento
-            "payment_method_id" => $_GET['payment_method_id'],
-            "payer" => [
-              "email" => 'test@test.com'
-            ]
-          ]));
-        }
+
 
     }
 

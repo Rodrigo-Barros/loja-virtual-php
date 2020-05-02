@@ -4,8 +4,9 @@
     if( isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']!=='user') {
         header("Location:/ecommerce/public/logout.php");
     }
-    $pedidos = Database::sql("SELECT Pedidos.id, Produtos.nome as produto, Produtos.preco, itemPedido.quantidade,
-    Usuarios.nome as user, Usuarios.endereco, Usuarios.estado, Usuarios.cidade, Usuarios.cep, Usuarios.bairro
+    $pedidos = Database::sql("SELECT Pedidos.id, Produtos.nome as produto, Produtos.preco,
+    Pedidos.meio_pagamento, Pedidos.idPagamento,itemPedido.quantidade, Usuarios.nome as user,
+    Usuarios.endereco, Usuarios.estado, Usuarios.cidade, Usuarios.cep, Usuarios.bairro
     FROM Pedidos
         INNER JOIN itemPedido
         ON itemPedido.idPedido = Pedidos.id
@@ -91,6 +92,12 @@
           <p>Endereco: <?=$pedidoInfo->endereco?></p>
           <p>CEP: <?=$pedidoInfo->cep?></p>
           <p>Cidade: <?=$pedidoInfo->cidade?></p>
+          <p> Método de Pagamento: <?=$pedidoInfo->meio_pagamento?></p>
+          <?php if ($pedidoInfo->idPagamento !== 'default'): ?>
+            <?php $accessToken = 'TEST-8864676676772087-041722-7ef8cc5db28f3f3fce77e4b05395c34e-194214343'; ?>
+          <p>Indentificação do Pagamento: <?=$pedidoInfo->idPagamento?></p>
+          <a href="https://api.mercadopago.com/v1/payments/<?=$pedidoInfo->idPagamento?>?access_token=<?=$accessToken?>">Detalhes do pagamento</a>
+          <?php endif; ?>
         </div>
     </body>
 </html>

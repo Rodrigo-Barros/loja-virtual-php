@@ -1,6 +1,8 @@
 /* Home */
 @import "vars.css";
 
+
+
 body {
   margin: 0;
   padding: 0;
@@ -537,10 +539,9 @@ div.payments img{
 }
 
 .compra-finalizada{
-  background:blue;
+  background:green;
   font-size: 17px;
   font-weight: bold;
-  margin-top: 10px;
 }
 
 .mercadoPago {
