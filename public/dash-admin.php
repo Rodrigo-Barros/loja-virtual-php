@@ -13,7 +13,6 @@ if ( isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']=='
 $admin = new Admin();
 $cats=Database::sql("SELECT * FROM Categorias");
 $cats->execute();
-
 ?>
 
 <!DOCTYPE html>
@@ -21,153 +20,191 @@ $cats->execute();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de controle - Administrador</title>
-    <link rel="stylesheet" href="css/vars.css">
+    <title>DashBoard - Admin</title>
     <link rel="stylesheet" href="css/dash-admin.css">
 </head>
 <body>
-    <nav id="top-menu">
-        <ul id="top-menu-left">
-            <li><a href="/ecommerce" title="Leva a página incial">Ecommerce</a></li>
-            <li><a href="#produtos" title="Gerenciamento de produtos">Produtos</a></li>
-            <li><a href="#pedidos" title="Acompanhamento do adamento dos Produtos">Pedidos</a></li>
-            <li>
-                <a href="#usuarios" title="Gerenciamento de Administradores">
-                    Usuários
-                </a>
-            </li>
-        </ul>
-
-        <ul id="top-menu-right">
-            <li><a href="#">configurações</a></li>
-            <ul>
-                <li>
-                    <a href="#editar" title="Permite modificar dados da sua conta como senha entre outras opções">editar</a>
-                </li>
-                <li><a href="logout.php" title="Encerra sua sessão">sair</a></li>
+    <div class="d-grid">
+        <nav>
+            <h1>Dashboard</h1>
+            <ul class="menu">
+                <li><a href="public" title="Vai para a loja">Ecommerce</a></li>
+                <li><a href="#" onclick="new Categorias('categorias',this)">Categorias</a></li>
+                <li><a href="#" onclick="new Produtos('produtos', this)">Produtos</a></li>
+                <li><a href="#" onclick="new Administradores('administradores', this)">Administradores</a></li>
+                <li><a href="#" onclick="new Pedidos('pedidos',this)">Pedidos</a></li>
+                <li><a href="public/logout.php">Sair</a></li>
             </ul>
-        </ul>
-    </nav>
+        </nav>
+        <aside>
+            <div class="paginas">
+                <div class="categorias pagina" data-name="categorias">
+                    <h1>Categorias</h1>
+                    <table>
+                        <thead>
+                            <th>id</th>
+                            <th>categoria</th>
+                            <th>ações</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Móveis</td>
+                                <td>
+                                    <button class="button button__primary" onclick="editarCategoria(1,'Nome')">editar</button>
+                                    <button class="button button__danger">excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-    <div id="paginas">
-        <div id="produtos">
-            <h1>Categorias:</h1>
+                    <button class="button button__create scale-up">Criar Nova Categoria</button>
+                </div>
 
-            <form action="" method="post">
-                <label for="cat_nome">Categoria:</label>
-                <input type="text" id="cat_nome" name="cat_nome" placeholder="Digite o nome da Categoria">
-                <input type="submit" value="Cadastrar">
-            </form>
+                <div class="produtos pagina" data-name="produtos">
+                    <h1>Produtos</h1>
+                    <table>
+                        <thead>
+                            <th>id</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>quantidade</th>
+                            <th>Ações</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Mesa</td>
+                                <td>Móveis</td>
+                                <td>R$ 300,00</td>
+                                <td>100</td>
+                                <td>
+                                    <button class="button button__primary" onclick="editarProduto(1,'Nome')">editar</button>
+                                    <button class="button button__danger" onclick="deletarProduto(1)" >excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <?php
-                if ( isset($_POST['cat_nome']) ){
-                    $admin->createCategory($_POST['cat_nome']);
-                    unset($_POST['cat_nome']);
-                }
-            ?>
+                    <button class="button button__create scale-up">Criar Produto</button>
+                </div>
 
-            <h1>Produtos</h1>
-            <?php
-              $produtos = Database::sql("SELECT Produtos.nome as produto, Produtos.preco, Produtos.estoque, Categorias.nome as categoria
-                 FROM Produtos
-                 INNER JOIN Categorias
-                 ON Categorias.id = Produtos.idCategoria");
-              $produtos->execute();
-            ?>
-            <table>
-              <thead>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Preço</th>
-                <th>Quantidade</th>
-              </thead>
+                <div class="administradores pagina" data-name="administradores">
+                    <h1>Administradores</h1>
+                    <table>
+                        <thead>
+                            <th>id</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Ações</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Admin</td>
+                                <td>admin@email.com</td>
+                                <td>
+                                    <button class="button button__primary" onclick="editarProduto(1,'Nome')">editar</button>
+                                    <button class="button button__danger" onclick="deletarProduto(1)">excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-              <tbody>
-                <?php foreach ($produtos->fetchAll(PDO::FETCH_OBJ) as $produto): ?>
-                  <tr>
-                    <td><?=$produto->produto?></td>
-                    <td><?=$produto->categoria?></td>
-                    <td><?=$produto->preco?></td>
-                    <td><?=$produto->estoque?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
+                    <button class="button button__create scale-up">Criar Novo Admin</button>
+                </div>
 
-            <form action="" method="post" enctype="multipart/form-data">
-                <label for="prod_cat_id">Categoria:</label>
-                <select name="prod_cat_id" id="prod_cat_id">
-                    <option value="">Escolha um Categoria</option>
-                    <?php foreach( $cats as $row): ?>
-                        <option value="<?=$row['id'];?>"><?=$row['nome'];?></option>
-                    <?php endforeach; ?>
+                <div class="pedidos pagina" data-name="pedidos">
+                    <h1>Pedidos</h1>
+                    <table>
+                        <thead>
+                            <th>id</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Finalizado</td>
+                                <td><a href="#" onclick="//getPedidoInfo('pedidoIdo')">mais detalhes</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+              <div class="detalhes-pedido pagina" data-name="detalhes">
+                  <h1>Detalhes do Pedido: 27</h1>
+                      <table>
+                          <thead>
+                              <th>Produto</th>
+                              <th>Preço</th>
+                              <th>Quantidade</th>
+                              <th>SubTotal</th>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td>Xioami mi max</td>
+                                  <td>R$ 1000,00</td>
+                                  <td>2</td>
+                                  <td><a href="#" onclick="//getPedidoInfo('pedidoIdo')">R$ 1000,00</a></td>
+                              </tr>
+
+                              <tr>
+                                  <td colspan="3">Total:</td>
+                                  <td>R$ 2000,00</td>
+                              </tr>
+                          </tbody>
+                      </table>
+
+                  <div class="display-pedido-info">
+                      
+                  </div>
+
+              </div>
+            </div>
+            
+            <div class="forms">
+              <!-- formulários de criação -->
+              <form id="criar-categoria" onsubmit="return Categorias.create()">
+                <h1>Criar categoria</h1>
+                <label for="categoria-nome">Categoria:</label>
+                <input type="text" name="create-category" id="categoria-nome"/>
+                <input type="submit" value="Cadastrar Categoria" />
+              </form>
+              <form id="criar-produto" enctype="multipart/form-data">
+                <h1>Criar Produto</h1>
+                <label for="produto">Produto:</label>
+                <input type="text" name="produto" id="produto">
+                <label for="produto-categoria">Categoria:</label>
+                <select name="produto-categoria" id="produto-categoria">
+                  <option value="default">Escolha Uma Opção</option>
                 </select>
+                <label for="produto-preco">preco</label>
+                <input type="text" name="produto-preco" id="produto-preco">
+                <label for="produto-quantidade">Quantidade:</label>
+                <input type="number" name="produto-quantidade" id="produto-quantidade" min="1">
+                <label for="produto-fotos">Fotos:</label>
+                <input type="file" name="produto-fotos[]" id="produto-fotos" multiple>
+                <input type="text" name="produto-descricao" id="">
+                <input type="submit" value="Cadastrar Produtos">
+                <input type="hidden" name="create-product" value="true">
+              </form>
 
-                <label for="prod_nome">Produto:</label>
-                <input type="text" id="prod_nome" name="prod_nome"  placeholder="Nome do Produto">
-
-                <label for="prod_preco">Preço:</label>
-                <input type="text" id="prod_preco" name="prod_preco" placeholder="digite o preço do produto">
-
-                <label for="prod_estoque" title="Quantidade de itens no estoque">Estoque:</label>
-                <input type="number" id="prod_estoque" name="prod_estoque"  min=1>
-
-                <label for="prod_desc">Descrição:</label>
-                <textarea name="prod_desc" id="prod_desc" cols="30" rows="10" placeholder="Descrição"></textarea>
-
-                <label for="prod_img">Imagens:</label>
-                <input type="file" id="prod_img" name="prod_img[]" multiple="true" >
-
-                <input type="submit" value="Cadastrar">
-            </form>
-
-            <?php
-                if (isset($_POST['prod_cat_id']) && isset($_POST['prod_nome'])
-                 && isset($_POST['prod_preco']) && isset($_POST['prod_estoque']) && isset($_POST['prod_desc'])){
-                    $admin->createProduct(
-                        $_POST['prod_cat_id'],
-                        $_POST['prod_nome'],
-                        $_POST['prod_preco'],
-                        $_POST['prod_estoque'],
-                        $_POST['prod_desc']
-                    );
-                    unset($_POST['prod_cat_id']);
-                    unset($_POST['prod_nome']);
-                    unset($_POST['prod_preco']);
-                    unset($_POST['prod_estoque']);
-                    unset($_POST['prod_desc']);
-                }
-            ?>
-
-        </div>
-        <div id="pedidos">
-            <h1>Pedidos</h1>
-        </div>
-        <div id="usuarios">
-            <h1>Usuários</h1>
-            <table class="table-scrollY">
-            <thead>
-                <th>id da Compra</th>
-                <th>valor da compra</th>
-            </thead>
-            <tbody>
-
-                <?php foreach (Database::sqlFor("SELECT  Pedidos.id, SUM(itemPedido.preco) as preco FROM itemPedido
-                INNER JOIN Pedidos
-                ON Pedidos.id = itemPedido.idPedido
-                Group By Pedidos.id;") as $row) :?>
-                    <tr>
-                        <td><?= $row['id']?></td>
-                        <td><?= 'R$ ' .$row['preco']?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-            </table>
-        </div>
-        <div id="editar">
-            <h1>Editar</h1>
-        </div>
+              <form action="" id="criar-administrador" onsubmit="return Administradores.create()">
+                <h1>Criar Administrador</h1>
+                <input type="hidden" name="create-admin" value="true">
+                <label for="administrador-nome">Nome:</label>
+                <input type="text" name="administrador-nome" id="administrador-nome" required>
+                <label for="administrador-email">Email:</label>
+                <input type="email" name="administrador-email" id="administrador-email" required>
+                <label for="administrador-senha">Senha:</label>
+                <input type="password" name="administrador-senha" id="administrador-senha" required>
+                <input type="submit" value="Cadastrar Administrador">
+              </form>
+            </div>
+        </aside>
+			<script src="js/admin.js"></script>
     </div>
-    <footer></footer>
 </body>
 </html>

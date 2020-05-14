@@ -12,72 +12,128 @@ table, th, td{
   border-collapse: collapse;
 }
 
-.table-scrollY {
-  display: block;
-  width: 300px;
-  height: 50%;
-  overflow-y: auto;
-}
 
 table td{
   text-align: center;
+  /* padding: 10px; */
 }
 
-
-
-ul li:hover a{
-    background: var(--dash-admin-hover-bg);
-    color:var(--dash-admin-hover-text) !important;
+table {
+    margin: 0 15px 100px 15px;
+    width: calc(100% - 30px);
 }
 
-#top-menu{
-    display: flex;
-    position: fixed;
-    top:0;
-    width: 100%;
-    flex-direction: row;
-    height: 50px;
-    justify-content: space-between;
-    background: var(--dash-admin-menu-top-bg);
-}
-ul#top-menu-left li a {padding: 0 10px;}
-ul#top-menu-left li a,
-ul#top-menu-left li{
+table td a{
     display: block;
     text-decoration: none;
-    color: var(--text-light);
+    color: var(--dash-admin-text-dark);
+    padding: 10px 0;
 }
 
-ul#top-menu-left li{
-    float: left;
-
-    line-height: 50px;
+table tbody tr:last-child td[colspan="3"],
+table tbody tr:last-child td[colspan="3"] + td
+{
+	border:none;
 }
 
-ul#top-menu-right li a{
-    line-height: 50px;
-    display: block;
-    padding: 0 10px;
+
+.d-grid{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-auto-rows: 100vh;
+}
+
+.d-grid nav{
+    background:var(--dash-admin-primary);
+}
+
+.menu li:hover a {
+    background: orange !important;
+}
+.menu .sub-menu li:hover a
+{
+    background:orange;
+}
+
+.menu a, nav h1{
+    padding: 10px;
     text-decoration: none;
-    color:#fff;
+    display: block;
+    text-align:center;
+    color: var(--dash-admin-text-light)
 }
 
-ul#top-menu-right  ul { visibility: hidden;}
 
-ul#top-menu-right li:hover ~ ul,
-ul#top-menu-right  ul:hover{
-    visibility: visible;
-    background: var(--dash-admin-menu-top-bg);
+.pagina h1{
+    margin: 15px;
 }
 
-/* Páginas */
-
-div#produtos,div#pedidos,div#usuarios{
-    height: calc(100vh - 50px);
+.button {
+    padding: 10px 10px;
+    border: 0;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: bold;
 }
 
-div#editar { height: calc(100vh)}
+.button:hover{
+    opacity: 0.8;    
+}
 
-div#paginas div h1{
-    padding-top:50px;
+.button__primary{
+    background: blue;
+}
+
+.button__danger{
+    background: red;
+}
+
+.scale-up:hover{
+    animation: .7s scale-up forwards;
+}
+
+.button__create {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: blue;
+    padding: 15px 30px;
+}
+
+
+.produtos,
+.categorias,
+.administradores,
+.pedidos,
+.detalhes-pedido
+{
+    display: none;
+}
+
+.paginas
+{
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+.display-pedido-info,
+.detalhes-pedido h1
+
+{
+	margin: 15px;
+	background: var(--dash-admin-primary);
+	padding: 10px;
+	color: #fff;
+	border-radius: 10px;
+}
+
+.display-pedido-info a,
+.display-pedido-info a:visited{
+	text-decoration:none;
+	color:orange;
+}
+
+@keyframes scale-up {
+    from{ transform: scale(1,1) }
+    to{ transform: scale(1.2,1.2) }
 }

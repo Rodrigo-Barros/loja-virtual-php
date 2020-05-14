@@ -11,6 +11,7 @@ class Api
     {
         $this->request = $_SERVER['REQUEST_METHOD'];
         $this->args = $_REQUEST;
+				header('content-type: application/json');
     }
 
     public function requestHandler()
@@ -36,31 +37,70 @@ class Api
     // implem
     public function getFunctionsHandler(Method $method)
     {
-        forEach ($this->args as $arg=>$key){
-            switch($arg){
-                case 'finalizar_pedido':
-                    $method->finishOrder($_GET['finalizar_pedido'], $_GET['userId'], $_GET['productInfo']);
-                    return;
 
-                default:
-                    echo 'rota não implementada';
-                    return;
-            }
-        }
+      forEach ($this->args as $arg=>$key){
+        switch($arg){
+              case 'finalizar_pedido':
+                  $method->finishOrder($_GET['finalizar_pedido'], $_GET['userId'], $_GET['productInfo']);
+                  return;
+              case 'categorias':
+                  $method->getCategorias();
+                  return;
+              case 'produtos':
+                  $method->getProdutos();
+                return;
+              case 'administradores':
+                $method->getAdmins();
+                return;
+              case 'pedidos':
+                $method->getPedidos();
+                return;
+              case 'pedido':
+                $method->getPedido($key);
+                return;
+
+              default:
+                  echo json_encode(["Detalhes do Erro"=>'rota não implementada']);
+                return;
+          }
+      }
     }
 
     public function postFunctionsHandler(Method $method)
     {
-      forEach ($this->args as $arg=>$key){
+      if(count($this->args) == 0){
+        echo 'rota não implementada';
+        return;
+      }
+      forEach ($this->args as $arg=>$value){
           switch($arg){
               case 'post-comment':
                   $method->letComment($_POST['userId'], $_POST['productId'], $_POST['comment'], $_POST['note']);
                   return;
-
+              case 'delete-product':
+                $method->deleteProduct(intval($value));
+                return;
+              case 'delete-categorie':
+                $method->deleteCategorie(intval($value));
+                return;
+              case 'delete-admin':
+                $method->deleteAdmin(intval($value));
+                return;
+              case 'create-category':
+                $method->createCategory($value);
+                return;
+              case 'create-product':
+                $method->createProduct($value);
+                return;
+              case 'create-admin':
+                $admin = new Admin();
+                $admin->createAdmin($_POST['administrador-nome'], $_POST['administrador-email'], $_POST['administrador-senha']);
+                return;
               default:
                   echo 'rota não implementada';
                   return;
           }
+
       }
     }
 
@@ -144,6 +184,136 @@ class Method
 
 
 
+    }
+
+		public function getCategorias(){
+			$cats = Database::sql("SELECT * FROM Categorias");
+			$cats->execute();
+			echo json_encode($cats->fetchAll(PDO::FETCH_OBJ));
+		}
+
+		public function getProdutos()
+		{
+			$produtos = Database::sql("SELECT Produtos.nome,Produtos.preco, Produtos.estoque,Produtos.id,Categorias.nome as categoria from Produtos
+				INNER JOIN Categorias 
+				ON Produtos.idCategoria = Categorias.id");
+			$produtos->execute();
+			echo json_encode($produtos->fetchAll(PDO::FETCH_OBJ));
+		}
+
+		public function getAdmins()
+		{
+			$admins = Database::sql("SELECT id,nome,email FROM Administradores");
+			$admins->execute();
+			echo json_encode($admins->fetchAll(PDO::FETCH_OBJ));
+		}
+
+		public function getPedidos()
+		{
+			$pedidos=Database::sql('SELECT id,status_pedido FROM Pedidos');
+			$pedidos->execute();
+			echo json_encode( $pedidos->fetchAll(PDO::FETCH_OBJ) );
+		}
+
+		public function getPedido($pedidoId)
+		{
+			$pedido = Database::sql('
+				SELECT 
+					Pedidos.id as pedido_id, Usuarios.nome, Usuarios.email, Usuarios.estado,
+					Usuarios.cidade, Usuarios.bairro, Usuarios.endereco, Usuarios.cep,
+					Pedidos.meio_pagamento, itemPedido.preco, Produtos.nome as produto, 
+					itemPedido.idPedido, itemPedido.quantidade, Pedidos.idPagamento
+				FROM itemPedido
+					INNER JOIN Produtos
+					ON Produtos.id = itemPedido.idProduto
+					INNER JOIN Pedidos
+					ON itemPedido.idPedido = Pedidos.id
+					INNER JOIN Usuarios
+					ON Usuarios.id = Pedidos.usuario_id
+				WHERE Pedidos.id = :pedidoId');
+			$pedido->bindParam("pedidoId", $pedidoId);
+			$pedido->execute();
+			echo json_encode( $pedido->fetchAll(PDO::FETCH_OBJ) );
+		}
+		
+    public function deleteProduct($productId)
+    {
+      $sql=Database::sql("DELETE FROM Produtos WHERE id = :productId");
+      $sql->bindParam('productId', $productId);
+      if($sql->execute()){
+        echo json_encode(["response"=>"conteudo deletado com sucesso"]);
+        http_response_code(200);
+      }else{
+        echo json_encode([
+          "response"=>"não foi possível deletar o produto solicitado", 
+          "detalhes do erro" => $sql->errorInfo()
+        ]);
+        http_response_code(600);
+      }
+    }
+
+    public function deleteCategorie(int $categoriaId)
+    {
+      $sql = Database::sql("DELETE FROM Categorias WHERE id = :categoriaId");
+      $sql->bindParam('categoriaId',$categoriaId);
+      if($sql->execute()){
+        echo "A categoria foi excuída com sucesso";
+        http_response_code(200);
+      }else{
+        echo json_encode([
+          "response"=>"Não foi Possível delete a categoria informada",
+          "detalhes do erro"=>$sql->errorInfo()
+        ]);
+        http_response_code(600);
+      }
+    }
+
+    public function createCategory($category)
+    {
+      $sql = Database::sql("INSERT INTO Categorias (nome) VALUES (:categoriaId)");
+      $sql->bindParam('categoriaId',$category);
+      $sql2 = Database::sql("SELECT * FROM Categorias ORDER BY id DESC LIMIT 1");
+
+      if( $sql->execute() ){
+        $sql2->execute();
+        echo json_encode([
+          "id"=>$sql2->fetch(PDO::FETCH_OBJ)->id,
+          "nome"=>$category
+        ]);
+      }else{
+        echo json_encode([
+          "response"=>"Não foi possível cadastrar a sua categoria",
+          "detalhes do erro"=> $sql->errorInfo()
+        ]);
+      }
+
+    }
+
+    public function createProduct(){
+      $admin = new Admin();
+      $admin->createProduct($_POST['produto-categoria'],
+        $_POST['produto'],
+        $_POST['produto-preco'],
+        $_POST['produto-quantidade'],
+        $_POST['produto-descricao'],
+        $_POST['produto-fotos']
+      );
+    }
+
+    public function deleteAdmin(int $adminId)
+    {
+      $sql = Database::sql('DELETE FROM Administradores WHERE id = :adminId');
+      $sql->bindParam('adminId', $adminId);
+      if($sql->execute()){
+        echo "Administrador excluido com sucesso";
+        http_response_code(200);
+      }else{
+        echo json_encode([
+          "response"=>"Não foi possível excluir o administrador espcificado",
+          "detalhes do erro"=>$sql->errorInfo()
+        ]);
+        http_response_code(600);
+      }
     }
 
     public function curlRequest(string $url, string $method, array $params){

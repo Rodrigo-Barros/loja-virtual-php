@@ -22,14 +22,29 @@ class Admin{
         return False;
     }
 
-    public function createAdmin($nome,$email,$senha) : bool
+    public function createAdmin($nome,$email,$senha)
     {
         $senha = password_hash($senha,PASSWORD_BCRYPT);
         $query=Database::sql("INSERT INTO Administradores (nome,email,senha) Values (:nome,:email,:senha)");
         $query->bindParam(":nome",$nome);
         $query->bindParam(":email",$email);
         $query->bindParam(":senha",$senha);
-        return $query->execute();
+        $adminId = Database::sql("SELECT id FROM Administradores ORDER BY id DESC LIMIT 1");
+        if( $query->execute() ){
+          $adminId->execute();
+          echo json_encode([
+            "id"=>$adminId->fetch(PDO::FETCH_OBJ)->id,
+            "nome" => $nome,
+            "email" => $email
+          ]);
+          http_response_code(200);
+        }else{
+          echo json_encode([
+            "response"=>"Houve uma erro ao tentar criar o administrador",
+            "detalhes dos erro" => $query->errorInfo()
+          ]);
+          http_response_code(600);
+        }
     }
     
     public function createCategory($nome)
@@ -54,11 +69,11 @@ class Admin{
         $query->execute();
     }
 
-    public function createProduct($cat_id,$produto,$preco,$estoque,$desc)
+    public function createProduct($cat_id,$produto,$preco,$estoque,$desc, $produto_img)
     {   
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ecommerce/public/uploads/';
         $imagens = [];
-        foreach ($_FILES['prod_img']['tmp_name'] as $key=>$value){
+        foreach ($_FILES[$produto_img]['tmp_name'] as $key=>$value){
             $uploadFile = $uploadDir . uniqid();
             array_push($imagens,basename($uploadFile));
             move_uploaded_file($value,$uploadFile);

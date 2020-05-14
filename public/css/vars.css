@@ -6,9 +6,9 @@
     --text-dark:#000;
 
     /* dash-admin */
-    --dash-admin-menu-top-bg: green;
-    --dash-admin-hover-text: #fff;
-    --dash-admin-hover-bg: red;
+    --dash-admin-primary: #162447;
+    --dash-admin-text-light: #fff;
+    --dash-admin-text-dark: #000;
 
     /* dash-user */
     --dash-user-menu-top-bg: blue;
