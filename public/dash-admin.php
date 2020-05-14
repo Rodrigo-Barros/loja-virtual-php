@@ -172,12 +172,13 @@ $cats->execute();
                 <input type="text" name="create-category" id="categoria-nome"/>
                 <input type="submit" value="Cadastrar Categoria" />
               </form>
-              <form id="criar-produto" enctype="multipart/form-data">
+              <form id="criar-produto" enctype="multipart/form-data" onsubmit="return Produtos.create()">
                 <h1>Criar Produto</h1>
+                <input type="hidden" name="create-product" value="true">
                 <label for="produto">Produto:</label>
                 <input type="text" name="produto" id="produto">
                 <label for="produto-categoria">Categoria:</label>
-                <select name="produto-categoria" id="produto-categoria">
+                <select name="produto-categoria" id="produto-categoria" onclick="Produtos.updateSelect()">
                   <option value="default">Escolha Uma Opção</option>
                 </select>
                 <label for="produto-preco">preco</label>
@@ -188,7 +189,6 @@ $cats->execute();
                 <input type="file" name="produto-fotos[]" id="produto-fotos" multiple>
                 <input type="text" name="produto-descricao" id="">
                 <input type="submit" value="Cadastrar Produtos">
-                <input type="hidden" name="create-product" value="true">
               </form>
 
               <form action="" id="criar-administrador" onsubmit="return Administradores.create()">

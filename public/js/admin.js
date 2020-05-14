@@ -152,7 +152,7 @@ class Produtos extends Page{
 							<td>R$ ${item.preco.replace('.',',')}</td>
 							<td>${item.estoque}</td>
 							<td>
-							<button class="button button__primary"onclick="Produtos.edit(${item.id})">editar</button>
+							<button class="button button__primary"onclick="Produtos.edit(${item.id}, ${item.idCategoria})">editar</button>
 							<button class="button button__danger"onclick="Produtos.delete(${item.id}, this)">excluir</button>	
 							</td>
 						</tr>`;
@@ -184,9 +184,33 @@ class Produtos extends Page{
   }
 
   static create(){
-    var select = document.querySelector('#criar-produto select');
-    var form = document.querySelector('#criar-produto');
+    var form = new FormData(document.querySelector('#criar-produto'));
+    var table = document.querySelector('.produtos.pagina table');
+    fetch('api', {method:'POST', body:form}).then(response=>{
+      response.json().then(result=>{
+        if (response.status === 200){
+          table.innerHTML += `
+            <tr>
+              <td>${result[0].id}</td>
+              <td>${result[0].nome}</td>
+              <td>${result[0].categoria}</td>
+              <td>${result[0].preco}</td>
+              <td>${result[0].quantidade}</td>
+              <td>
+                <button class="button button__primary" onclick="Produtos.edit()">editar</button>
+							  <button class="button button__danger" onclick="Produtos.delete()">excluir</button>	
+              </td>
+            </tr>
+          `;
+        }
+        console.log(result);
+      });
+    });
+    return false;
+  }
 
+  static updateSelect(){
+    var select = document.querySelector('#criar-produto select');
     //pega as categorias e popula o select
     fetch('api?categorias').then(response=>{
       response.json().then(result=>{
@@ -195,7 +219,6 @@ class Produtos extends Page{
         });
       });
     });
-
   }
 
 

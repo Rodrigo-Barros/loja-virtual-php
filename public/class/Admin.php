@@ -69,7 +69,7 @@ class Admin{
         $query->execute();
     }
 
-    public function createProduct($cat_id,$produto,$preco,$estoque,$desc, $produto_img)
+    public function createProduct($cat_id,$produto,$preco,$estoque,$desc, $produto_img) : object
     {   
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/ecommerce/public/uploads/';
         $imagens = [];
@@ -88,7 +88,23 @@ class Admin{
         $query->bindParam(":estoque",$estoque);
         $query->bindParam(":descricao",$desc);
         $query->bindParam(":img",$imagens);
-        $query->execute();
+        $returnData = new stdClass();
+        $returnData->dbSucessfull=$query->execute();
+        $returnData->errorInfo=$query->errorInfo();
+
+        $query2 = Database::sql("SELECT Produtos.id, Produtos.idCategoria, Produtos.nome,Categorias.nome as categoria, Produtos.preco,
+        Produtos.estoque as quantidade
+          FROM Produtos 
+          INNER JOIN Categorias
+          ON Produtos.idCategoria = Categorias.id
+        ORDER BY id DESC LIMIT 1");
+        $query2->execute();
+        $productInsertedInfo = $query2->fetch(PDO::FETCH_OBJ);
+
+        $returnData->produtoData = $productInsertedInfo;
+
+        return $returnData;
+
     }
 
     public function editProduct($id_prod,$id_cat,$produto,$preco,$estoque,$desc){

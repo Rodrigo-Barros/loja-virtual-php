@@ -194,7 +194,8 @@ class Method
 
 		public function getProdutos()
 		{
-			$produtos = Database::sql("SELECT Produtos.nome,Produtos.preco, Produtos.estoque,Produtos.id,Categorias.nome as categoria from Produtos
+      $produtos = Database::sql("SELECT Produtos.nome,Produtos.preco, Produtos.estoque,Produtos.id,
+        Categorias.nome as categoria, Produtos.idCategoria as idCategoria from Produtos
 				INNER JOIN Categorias 
 				ON Produtos.idCategoria = Categorias.id");
 			$produtos->execute();
@@ -291,13 +292,25 @@ class Method
 
     public function createProduct(){
       $admin = new Admin();
-      $admin->createProduct($_POST['produto-categoria'],
+      $statusInsertedOnDB=$admin->createProduct($_POST['produto-categoria'],
         $_POST['produto'],
         $_POST['produto-preco'],
         $_POST['produto-quantidade'],
         $_POST['produto-descricao'],
-        $_POST['produto-fotos']
+        'produto-fotos'
       );
+      if ( $statusInsertedOnDB->dbSucessfull ){
+        echo json_encode([
+          $statusInsertedOnDB->produtoData
+        ]);
+        http_response_code(200);
+      }else{
+        echo json_encode([
+          "response"=>"Não foi possível cadastrar o produto no banco de dados",
+          "detalhes do erro"=>$statusInsertedOnDB->errorInfo
+        ]);
+        http_response_code(600);
+      }
     }
 
     public function deleteAdmin(int $adminId)
