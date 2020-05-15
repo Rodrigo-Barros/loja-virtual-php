@@ -32,7 +32,15 @@ require ('class/autoload.php');
             <div id="produto">
 
                 <h1><?= $produto->nome ?></h1>
+<?php
+    if($nota->nota != ""):
+    //TODO:testar se as notas estão aparecendo apenas se o produto tiver avaliações
+?>
+
                 <h4 style="display:block; width:90%;margin-left:15px">nota: <?=$nota->nota?></h4>
+<?php
+  endif;
+?>
                 <img src="uploads/<?=$imagens[0]?>" height="400" alt="Imagem <?=$produto->nome?>">
                 <p><?=$produto->descricao?></p>
                 <center>
@@ -47,7 +55,7 @@ require ('class/autoload.php');
                     </div>
 
                     <?php
-                            if (isset($_SESSION['userInfo'])==False):
+                            if (isset($_SESSION['userInfo'])==False || $_SESSION['userInfo']['userType']=='admin'):
                         ?>
                             <h4 class="clearfix" style="text-align:center">é necessário se logar antes de poder comprar algum produto</h4>
                         <?php

@@ -59,6 +59,7 @@ class Page{
 
 
 class Categorias extends Page{
+  static editButton;
 	get(){
 	var htmlNode = $('.categorias table tbody');
 	
@@ -72,7 +73,7 @@ class Categorias extends Page{
 							<td>${item.id}</td>
 							<td>${item.nome}</td>
 							<td>
-							<button class="button button__primary" onclick="Categorias.edit(${item.id})">editar</button>
+							<button class="button button__primary" onclick="Categorias.edit(${item.id}, this)">editar</button>
 							<button class="button button__danger" onclick="Categorias.delete(${item.id}, this)">excluir</button>	
 							</td>
 						</tr>`;
@@ -133,9 +134,46 @@ class Categorias extends Page{
       });
     return false;
   }
+
+  static edit(id,element){
+    this.editButton = element;
+    var categoria = element.parentElement.parentElement.children[1].innerHTML;
+    //var form = document.querySelector('#editar-categoria');
+    var inputCategoriaId = document.querySelector('#editar-categoria input[name="categoria-id"]');
+    inputCategoriaId.value = id;
+    var inputCategoriaNome = document.querySelector('#editar-categoria input[name="editar-categoria-nome"]');
+    inputCategoriaNome.value = categoria;
+    console.log(id, categoria);
+  }
+
+  static update(element){
+    var categoria = this.editButton.parentElement.parentElement.children[1];
+    var id = this.editButton.parentElement.parentElement.children[0];
+    var form = new FormData(element);
+    fetch('api', { method:"POST", body:form}).then(function(response){
+      console.log(response.status);
+      response.json().then(function(result){
+        id.innerText = result.id;
+        categoria.innerText = result.categoria;
+        console.log(result);
+      });
+    });
+
+    return false;
+    
+  }
+
+
+  //static edit(element, categoria){
+  //  var form = element;
+  //  fetch('api', {method: "POST", body:form}).then(response=>{
+  //    console.log(response);
+  //  });
+  //}
 }
 
 class Produtos extends Page{
+  static editButton;
 	get(){
 	var htmlNode = $('.produtos table tbody');
 	
@@ -152,7 +190,7 @@ class Produtos extends Page{
 							<td>R$ ${item.preco.replace('.',',')}</td>
 							<td>${item.estoque}</td>
 							<td>
-							<button class="button button__primary"onclick="Produtos.edit(${item.id}, ${item.idCategoria})">editar</button>
+							<button class="button button__primary"onclick="Produtos.edit(${item.id}, ${item.idCategoria}, this)">editar</button>
 							<button class="button button__danger"onclick="Produtos.delete(${item.id}, this)">excluir</button>	
 							</td>
 						</tr>`;
@@ -182,6 +220,35 @@ class Produtos extends Page{
       })
     }
   }
+  
+  static edit(produtoId, categoriaId, button){
+    this.editButton = button;
+    var produto = button.parentElement.parentElement.children[1].innerHTML;
+    var preco = parseFloat(button.parentElement.parentElement.children[3].innerHTML.replace('R$ ', '').replace(',','.'));
+    var quantidade = button.parentElement.parentElement.children[4].innerHTML;
+    //console.log(produto, categoria, preco, quantidade);
+    document.querySelector('#editar-produto input[name="editar-produto-nome"]').value=produto;
+    document.querySelector('#editar-produto input[name="editar-produto-preco"]').value=preco;
+    document.querySelector('#editar-produto input[name="editar-produto-quantidade"]').value=quantidade;
+    document.querySelector('#editar-produto input[name="product-id"]').value=produtoId;
+  }
+
+  static update(){
+    var form = new FormData(document.querySelector('#editar-produto'));
+    var produto = this.editButton.parentElement.parentElement.children[1];
+    var categoria = this.editButton.parentElement.parentElement.children[2];
+    var preco = this.editButton.parentElement.parentElement.children[3];
+    var quantidade = this.editButton.parentElement.parentElement.children[4];
+    fetch('api', {method:"POST", body:form}).then(function(response){
+      response.json().then(function(result){
+        produto.innerHTML = result.produto;
+        categoria.innerHTML = result.categoria;
+        preco.innerHTML = result.preco;
+        quantidade.innerHTML = result.estoque;
+      });
+    });
+    return false;
+  }
 
   static create(){
     var form = new FormData(document.querySelector('#criar-produto'));
@@ -197,8 +264,8 @@ class Produtos extends Page{
               <td>${result[0].preco}</td>
               <td>${result[0].quantidade}</td>
               <td>
-                <button class="button button__primary" onclick="Produtos.edit()">editar</button>
-							  <button class="button button__danger" onclick="Produtos.delete()">excluir</button>	
+                <button class="button button__primary" onclick="Produtos.edit(${result[0].id}, ${result[0].idCategoria}, this)">editar</button>
+							  <button class="button button__danger" onclick="Produtos.delete(${result[0].id}, this)">excluir</button>	
               </td>
             </tr>
           `;
@@ -209,8 +276,9 @@ class Produtos extends Page{
     return false;
   }
 
-  static updateSelect(){
-    var select = document.querySelector('#criar-produto select');
+  static updateSelect(element){
+    //var select = document.querySelector('#criar-produto select');
+    var select = element;
     //pega as categorias e popula o select
     fetch('api?categorias').then(response=>{
       response.json().then(result=>{
@@ -225,6 +293,7 @@ class Produtos extends Page{
 }
 
 class Administradores extends Page{
+  static editButton;
 	get(){
 	var htmlNode = $('.administradores table tbody');
 	
@@ -239,7 +308,7 @@ class Administradores extends Page{
 							<td>${item.nome}</td>
 							<td>${item.email}</td>
 							<td>
-							<button class="button button__primary"onclick="Administradores.edit(${item.id})">editar</button>
+							<button class="button button__primary"onclick="Administradores.edit(${item.id}, this)">editar</button>
 							<button class="button button__danger"onclick="Administradores.delete(${item.id}, this)">excluir</button>	
 							</td>
 						</tr>`;
@@ -284,13 +353,37 @@ class Administradores extends Page{
               <td>${result.nome}</td>
               <td>${result.email}</td>
               <td>
-                <button class="button button__primary" onclick="Produtos.edit(${result.id})">editar</button>
+                <button class="button button__primary" onclick="Produtos.edit(${result.id}, this)">editar</button>
 							  <button class="button button__danger" onclick="Produtos.delete(${result.id}, this)">excluir</button>	
               </td>
             </tr>
           `;
         }
         console.log(result);
+      });
+    });
+    return false;
+  }
+
+  static edit(id,element){
+    var rowNode = element.parentElement.parentElement.children;
+    this.editButton = rowNode;
+    var nome = rowNode[1].innerText;
+    var email = rowNode[2].innerText;
+    document.querySelector('#editar-admin input[name="nome"]').value=nome;
+    document.querySelector('#editar-admin input[name="email"]').value=email;
+    document.querySelector('#editar-admin input[name="id"]').value=id;
+  }
+
+  static update(form){
+    form = new FormData(form);
+    fetch('api', {method:"POST", body:form}).then(function(response){
+      response.json().then(function(result){
+        console.log(result);
+        if(response.status == 200){
+          Administradores.editButton[1].innerText = result.nome;
+          Administradores.editButton[2].innerText = result.email;
+        }
       });
     });
     return false;

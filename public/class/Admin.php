@@ -60,6 +60,20 @@ class Admin{
         $query->bindParam(":nome",$nome);
         $query->bindParam(":id_cat",$id_cat);
         $query->execute();
+
+        if ( $query ){
+          echo json_encode([
+            "id"=>$id_cat,
+            "categoria"=>"$nome"
+          ]);
+          http_response_code(200);
+        }else{
+          echo json_encode([
+            "response"=>"Houve um erro ao atualizar a categoria",
+            "detalhes do erro"=> $query->errorInfo()
+          ]);
+          http_response_code(600);
+        }
     }
 
     public function deleteCategory($id_cat)
@@ -123,6 +137,26 @@ class Admin{
         $query->bindParam(":descricao",$desc);
         $query->bindParam(":id_prod",$id_prod);
         $query_sts = $query->execute();
+        $queryCat = Database::sql("SELECT Categorias.nome FROM Produtos
+    	  INNER JOIN Categorias
+          ON Categorias.id = Produtos.idCategoria
+        ORDER BY Produtos.id DESC LIMIT 1");
+        $queryCat->execute();
+        if ($query_sts){
+          echo json_encode([
+            "produto"=>$produto,
+            "categoria"=>$queryCat->fetch(PDO::FETCH_OBJ)->nome,
+            "preco"=>$preco,
+            "estoque"=>$estoque
+          ]);
+          http_response_code(200);
+        }else{
+          echo json_encode([
+            "response"=>"Não foi possível atualizar o produto",
+            "detalhes do erro"=> $query->errorInfo()
+          ]);
+          http_response_code(600);
+        }
     }
 
     public function deleteProduct($id_prod)

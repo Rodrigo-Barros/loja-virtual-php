@@ -172,21 +172,23 @@ $cats->execute();
                 <input type="text" name="create-category" id="categoria-nome"/>
                 <input type="submit" value="Cadastrar Categoria" />
               </form>
+
               <form id="criar-produto" enctype="multipart/form-data" onsubmit="return Produtos.create()">
                 <h1>Criar Produto</h1>
                 <input type="hidden" name="create-product" value="true">
                 <label for="produto">Produto:</label>
                 <input type="text" name="produto" id="produto">
                 <label for="produto-categoria">Categoria:</label>
-                <select name="produto-categoria" id="produto-categoria" onclick="Produtos.updateSelect()">
+                <select name="produto-categoria" id="produto-categoria" onclick="Produtos.updateSelect(this)">
                   <option value="default">Escolha Uma Opção</option>
                 </select>
-                <label for="produto-preco">preco</label>
+                <label for="produto-preco">Preco:</label>
                 <input type="text" name="produto-preco" id="produto-preco">
                 <label for="produto-quantidade">Quantidade:</label>
                 <input type="number" name="produto-quantidade" id="produto-quantidade" min="1">
                 <label for="produto-fotos">Fotos:</label>
                 <input type="file" name="produto-fotos[]" id="produto-fotos" multiple>
+                <label for="produto-descricao">Descrição:</label>
                 <input type="text" name="produto-descricao" id="">
                 <input type="submit" value="Cadastrar Produtos">
               </form>
@@ -201,6 +203,49 @@ $cats->execute();
                 <label for="administrador-senha">Senha:</label>
                 <input type="password" name="administrador-senha" id="administrador-senha" required>
                 <input type="submit" value="Cadastrar Administrador">
+              </form>
+
+              <!-- formulários de edição -->
+
+              <form id="editar-categoria" onsubmit="return Categorias.update(this)">
+                <h1>Editar categoria</h1>
+                <input type="hidden" name="edit-category">
+                <input type="hidden" name="categoria-id">
+                <label for="editar-categoria-nome">Categoria:</label>
+                <input type="text" name="editar-categoria-nome" id="editar-categoria-nome"/>
+                <input type="submit" value="Atualizar" />
+              </form>
+              
+              <form id="editar-produto" onsubmit="return Produtos.update(this)">
+                <h1>Editar Produto</h1>
+                <input type="hidden" name="edit-product">
+                <input type="hidden" name="product-id">
+                <label for="editar-produto-nome">Produto:</label>
+                <input type="text" id="editar-produto-nome" name="editar-produto-nome">
+                <label for="editar-produto-categoria">Categoria:</label>
+                <select id="editar-produto-categoria" name="editar-produto-categoria" onclick="Produtos.updateSelect(this)" required>
+                  <option value="default">Selecione um categoria</option>
+                </select>
+                <label for="editar-produto-preco">Preco:</label>
+                <input type="text" id="editar-produto-preco" name="editar-produto-preco">
+                <label for="editar-produto-quantidade">Quantidade:</label>
+                <input type="text" id="editar-produto-quantidade" name="editar-produto-quantidade">
+                <input type="submit" value="Atualizar">
+                <label for="editar-produto-descricao">Descricao:</label>
+                <textarea name="editar-produto-descricao" id="editar-produto-descricao" cols="30" rows="10"></textarea>
+              </form>
+
+              <form id="editar-admin" onsubmit="return Administradores.update(this)">
+                <h1>Editar Admin</h1>
+                <input type="hidden" name="edit-admin" value="true">
+                <input type="hidden" name="id">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+                <label for="senha">Senha:</label>
+                <input type="password" name="senha" id="senha">
+                <input type="submit" value="Atualizar" title="se você não digitar nesse campo a sua senha atual será mantida">
               </form>
             </div>
         </aside>

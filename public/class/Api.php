@@ -96,6 +96,23 @@ class Api
                 $admin = new Admin();
                 $admin->createAdmin($_POST['administrador-nome'], $_POST['administrador-email'], $_POST['administrador-senha']);
                 return;
+              case 'edit-category':
+                $admin = new Admin();
+                $admin->editCategory($_POST['categoria-id'], $_POST['editar-categoria-nome']);
+                return;
+              case 'edit-product':
+                $admin = new Admin();
+                $admin->editProduct($_POST['product-id'],
+                  $_POST['editar-produto-categoria'],
+                  $_POST['editar-produto-nome'],
+                  $_POST['editar-produto-preco'],
+                  $_POST['editar-produto-quantidade'],
+                  $_POST['editar-produto-descricao']
+                );
+                return;
+              case 'edit-admin':
+                $method->editAdmin($_POST['id'],$_POST['nome'],$_POST['email'],$_POST['senha']);
+                return;
               default:
                   echo 'rota não implementada';
                   return;
@@ -327,6 +344,29 @@ class Method
         ]);
         http_response_code(600);
       }
+    }
+
+    public function editAdmin($id, $nome, $email, $senha){
+      $senha = ($senha == '') ? 'none'  : password_hash($senha,PASSWORD_BCRYPT);
+      $query = Database::sql("UPDATE Administradores SET email=:email, nome=:nome, senha=IF(:senha = 'none',senha ,:senha) WHERE id =:id");
+      $query->bindParam(':nome',$nome);
+      $query->bindParam(':email',$email);
+      $query->bindParam(':senha',$senha);
+      $query->bindParam(':id', $id);
+      if ($query->execute()) {
+        echo json_encode([
+          "nome"=>$nome,
+          "email"=>$email
+        ]);
+        http_response_code(200);
+      }else{
+        echo json_encode([
+          "response"=>"Não foi possível atualizar o administrador",
+          "detalhes do erro"=> $query->errorInfo()
+        ]);
+        http_response_code(500);
+      }
+      
     }
 
     public function curlRequest(string $url, string $method, array $params){
