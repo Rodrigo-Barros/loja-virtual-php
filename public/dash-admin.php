@@ -58,7 +58,7 @@ $cats->execute();
                         </tbody>
                     </table>
 
-                    <button class="button button__create scale-up">Criar Nova Categoria</button>
+                    <button class="button button__create scale-up" onclick="Categorias.showCreateForm()">Criar Nova Categoria</button>
                 </div>
 
                 <div class="produtos pagina" data-name="produtos">
@@ -87,7 +87,7 @@ $cats->execute();
                         </tbody>
                     </table>
 
-                    <button class="button button__create scale-up">Criar Produto</button>
+                    <button class="button button__create scale-up" onclick="Produtos.showCreateForm()">Criar Produto</button>
                 </div>
 
                 <div class="administradores pagina" data-name="administradores">
@@ -112,7 +112,7 @@ $cats->execute();
                         </tbody>
                     </table>
 
-                    <button class="button button__create scale-up">Criar Novo Admin</button>
+                    <button class="button button__create scale-up" onclick="Administradores.showCreateForm()">Criar Novo Admin</button>
                 </div>
 
                 <div class="pedidos pagina" data-name="pedidos">
@@ -189,11 +189,11 @@ $cats->execute();
                 <label for="produto-fotos">Fotos:</label>
                 <input type="file" name="produto-fotos[]" id="produto-fotos" multiple>
                 <label for="produto-descricao">Descrição:</label>
-                <input type="text" name="produto-descricao" id="">
+                <textarea name="produto-descricao" id="produto-descricao" cols="30" rows="10"></textarea>
                 <input type="submit" value="Cadastrar Produtos">
               </form>
 
-              <form action="" id="criar-administrador" onsubmit="return Administradores.create()">
+              <form id="criar-administrador" onsubmit="return Administradores.create()">
                 <h1>Criar Administrador</h1>
                 <input type="hidden" name="create-admin" value="true">
                 <label for="administrador-nome">Nome:</label>
@@ -230,9 +230,9 @@ $cats->execute();
                 <input type="text" id="editar-produto-preco" name="editar-produto-preco">
                 <label for="editar-produto-quantidade">Quantidade:</label>
                 <input type="text" id="editar-produto-quantidade" name="editar-produto-quantidade">
-                <input type="submit" value="Atualizar">
                 <label for="editar-produto-descricao">Descricao:</label>
                 <textarea name="editar-produto-descricao" id="editar-produto-descricao" cols="30" rows="10"></textarea>
+                <input type="submit" value="Atualizar">
               </form>
 
               <form id="editar-admin" onsubmit="return Administradores.update(this)">

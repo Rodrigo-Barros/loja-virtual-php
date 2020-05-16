@@ -137,3 +137,74 @@ table tbody tr:last-child td[colspan="3"] + td
     from{ transform: scale(1,1) }
     to{ transform: scale(1.2,1.2) }
 }
+
+/* forms */
+
+form{
+  display: none;
+  left: 60%;
+  margin-left: -250px;
+  top: 50%;
+  margin-top: -75px;
+  position: absolute;
+  width: 500px;
+  max-height: 500px;
+}
+
+form input,
+form textarea{
+  border:unset;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+form input[type="submit"]{
+  margin-bottom: 0;
+  background: orange;
+}
+
+form input[type="submit"]:hover{
+  background: #ffD500;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form textarea{
+  background:#213d84;
+  text-indent: 8px;
+  color:var(--dash-admin-text-light);
+}
+form input[type="text"],
+form input[type="submit"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form textarea{
+  padding: 10px 0;
+  border-radius: 15px;
+}
+
+form label{
+  display: inherit;
+  padding: 5px 0;
+}
+
+#criar-produto{
+  margin-top: -300px;
+}
+
+#criar-administrador{
+  margin-top: -150px;
+}
+
+#editar-produto{
+  margin-top: -300px;
+}
+
+#editar-admin{
+  margin-top: -150px;
+}
+
+

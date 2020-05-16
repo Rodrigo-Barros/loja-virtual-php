@@ -42,6 +42,12 @@ class Page{
     this.hiddenAllPages();
     document.querySelector('.paginas div.pagina[data-name="' + pageClass.name + '"]').style.display = 'block';
     pageClass.get();
+    document.querySelector('#criar-produto').style.display='none';
+    document.querySelector('#editar-produto').style.display='none';
+    document.querySelector('#criar-categoria').style.display='none';
+    document.querySelector('#editar-categoria').style.display='none';
+    document.querySelector('#criar-administrador').style.display='none';
+    document.querySelector('#editar-admin').style.display='none';
   }
 
   hiddenAllPages(){
@@ -62,7 +68,7 @@ class Categorias extends Page{
   static editButton;
 	get(){
 	var htmlNode = $('.categorias table tbody');
-	
+  htmlNode.innerHTML='';
 	fetch('api?categorias').then(function(response){
 		response.json()
 			.then(function(result){
@@ -114,10 +120,12 @@ class Categorias extends Page{
           console.log(result)
           var parsedResponse = JSON.parse(result);
           if ( response.status === 200 ) {
+            document.querySelector('#criar-categoria').style.display='none';
+            document.querySelector('.categorias.pagina').style.display='block'
             for (var i = 0; i < tableRowsCount; i++)
             {
               if( i === tableRowsCount - 1 ){
-                document.querySelector('.categorias.pagina table').innerHTML += `
+                document.querySelector('.categorias.pagina table tbody').innerHTML += `
                   <tr>
                     <td>${parsedResponse.id}</td>
                     <td>${parsedResponse.nome}</td>
@@ -144,6 +152,8 @@ class Categorias extends Page{
     var inputCategoriaNome = document.querySelector('#editar-categoria input[name="editar-categoria-nome"]');
     inputCategoriaNome.value = categoria;
     console.log(id, categoria);
+    document.querySelector('.categorias.pagina').style.display='none';
+    document.querySelector('#editar-categoria').style.display='block';
   }
 
   static update(element){
@@ -151,18 +161,27 @@ class Categorias extends Page{
     var id = this.editButton.parentElement.parentElement.children[0];
     var form = new FormData(element);
     fetch('api', { method:"POST", body:form}).then(function(response){
-      console.log(response.status);
-      response.json().then(function(result){
-        id.innerText = result.id;
-        categoria.innerText = result.categoria;
-        console.log(result);
-      });
+      if (response.status == 200){
+        response.json().then(function(result){ id.innerText = result.id;
+          categoria.innerText = result.categoria;
+          console.log(result);
+        });
+
+        setTimeout(function(){
+          document.querySelector('#editar-categoria').style.display='none';
+          document.querySelector('.categorias.pagina').style.display='block';
+        },1200)
+      }
     });
 
     return false;
     
   }
 
+  static showCreateForm(){
+    document.querySelector('#criar-categoria').style.display='block';
+    document.querySelector('.categorias.pagina').style.display='none';
+  }
 
   //static edit(element, categoria){
   //  var form = element;
@@ -174,9 +193,10 @@ class Categorias extends Page{
 
 class Produtos extends Page{
   static editButton;
+  static selectIsUpdated = false;
 	get(){
 	var htmlNode = $('.produtos table tbody');
-	
+  htmlNode.innerHTML='';
 	fetch('api?produtos').then(function(response){
 		response.json()
 			.then(function(result){
@@ -231,6 +251,9 @@ class Produtos extends Page{
     document.querySelector('#editar-produto input[name="editar-produto-preco"]').value=preco;
     document.querySelector('#editar-produto input[name="editar-produto-quantidade"]').value=quantidade;
     document.querySelector('#editar-produto input[name="product-id"]').value=produtoId;
+    // exibe o formuário
+    document.querySelector('#editar-produto').style.display="block";
+    document.querySelector('.produtos.pagina').style.display="none";
   }
 
   static update(){
@@ -241,10 +264,16 @@ class Produtos extends Page{
     var quantidade = this.editButton.parentElement.parentElement.children[4];
     fetch('api', {method:"POST", body:form}).then(function(response){
       response.json().then(function(result){
+        if (response.status == 200){
         produto.innerHTML = result.produto;
         categoria.innerHTML = result.categoria;
         preco.innerHTML = result.preco;
         quantidade.innerHTML = result.estoque;
+          setTimeout(function(){
+            document.querySelector('#editar-produto').style.display="none";
+            document.querySelector('.produtos.pagina').style.display="block";
+          }, 1200);
+        }
       });
     });
     return false;
@@ -252,7 +281,7 @@ class Produtos extends Page{
 
   static create(){
     var form = new FormData(document.querySelector('#criar-produto'));
-    var table = document.querySelector('.produtos.pagina table');
+    var table = document.querySelector('.produtos.pagina table tbody');
     fetch('api', {method:'POST', body:form}).then(response=>{
       response.json().then(result=>{
         if (response.status === 200){
@@ -261,7 +290,7 @@ class Produtos extends Page{
               <td>${result[0].id}</td>
               <td>${result[0].nome}</td>
               <td>${result[0].categoria}</td>
-              <td>${result[0].preco}</td>
+              <td>R$ ${result[0].preco.replace('.',',')}</td>
               <td>${result[0].quantidade}</td>
               <td>
                 <button class="button button__primary" onclick="Produtos.edit(${result[0].id}, ${result[0].idCategoria}, this)">editar</button>
@@ -269,6 +298,8 @@ class Produtos extends Page{
               </td>
             </tr>
           `;
+          document.querySelector('#criar-produto').style.display='none';
+          document.querySelector('.produtos.pagina').style.display='block';
         }
         console.log(result);
       });
@@ -276,13 +307,21 @@ class Produtos extends Page{
     return false;
   }
 
+  static showCreateForm(){
+    $('.produtos.pagina').style.display='none';
+    $('#criar-produto').style.display='block';
+  }
+
   static updateSelect(element){
     //var select = document.querySelector('#criar-produto select');
+    if ( this.selectIsUpdated ) return false;
+    this.selectIsUpdated=true;
     var select = element;
     //pega as categorias e popula o select
     fetch('api?categorias').then(response=>{
       response.json().then(result=>{
         result.forEach(item=>{
+          this.selectIsUpdated = true;
           select.insertAdjacentHTML('beforeend', '<option value="'+ item.id +'">'+ item.nome +'</option>');
         });
       });
@@ -347,6 +386,8 @@ class Administradores extends Page{
     fetch('api', {method:"POST", body:form}).then(response=>{
       response.json().then(result=>{
         if ( response.status === 200){
+          $('#criar-administrador').style.display='none';
+          $('.administradores.pagina').style.display='block';
           table.innerHTML += `
             <tr>
               <td>${result.id}</td>
@@ -373,6 +414,8 @@ class Administradores extends Page{
     document.querySelector('#editar-admin input[name="nome"]').value=nome;
     document.querySelector('#editar-admin input[name="email"]').value=email;
     document.querySelector('#editar-admin input[name="id"]').value=id;
+    document.querySelector('#editar-admin').style.display='block';
+    document.querySelector('.administradores.pagina').style.display='none';
   }
 
   static update(form){
@@ -383,10 +426,19 @@ class Administradores extends Page{
         if(response.status == 200){
           Administradores.editButton[1].innerText = result.nome;
           Administradores.editButton[2].innerText = result.email;
+          setTimeout(function(){
+            document.querySelector('#editar-admin').style.display='none';
+            document.querySelector('.administradores').style.display='block';
+          }, 1200);
         }
       });
     });
     return false;
+  }
+
+  static showCreateForm(){
+    $('#criar-administrador').style.display='block';
+    $('.administradores.pagina').style.display='none';
   }
 
 }
