@@ -8,15 +8,19 @@ class User
     public function createUser($email,$senha,$nome) : bool
     {
         $senha = password_hash($senha,PASSWORD_BCRYPT);
-        $query = Database::sql("INSERT INTO Usuarios (email,senha,nome) Values (:email,:senha,:nome)");
+        //$query = Database::sql("INSERT INTO Usuarios (email,senha,nome) Values (:email,:senha,:nome)");
+        $conn = Database::connect();
+        $query = $conn->prepare("INSERT INTO Usuarios (email,senha,nome) Values (:email,:senha,:nome)");
         $query->bindParam(":email",$email);
         $query->bindParam(":senha",$senha);
         $query->bindParam(":nome",$nome);
+        $query_status = $query->execute();
         session_start();
         $_SESSION['userInfo']['email'] = $email;
         $_SESSION['userInfo']['nome'] = $nome;
         $_SESSION['userInfo']['userType'] = 'user';
-        return $query->execute();
+        $_SESSION['userInfo']['id'] = $conn->lastInsertId();
+        return $query_status;
     }
 
     public function login($email,$senha) : bool
