@@ -39,7 +39,7 @@ exit 0
 }
 
 show_usage(){
-  echo $(basename $0) "email" "email_pass"
+  echo $(basename $0) "email" "email_pass" "display_name"
   exit 0
 }
 
