@@ -1,0 +1,50 @@
+#!/bin/sh
+
+schema="Ecommerce"
+db_user="admin"
+site_location="http://localhost/ecommerce"
+
+
+add_new_admin() {
+email=$1
+email_pass=$(generate_password_hash "$2")
+username=$3
+echo "Insira a senha do usuario do banco de dados:"
+mysql -u $db_user -p $schema << EOF
+USE $schema;
+INSERT INTO Administradores (email,nome,senha) VALUES ("$email","$username","$email_pass");
+EOF
+echo "Abrindo o site no seu navegador padrão para testar as configurações: "
+xdg-open "$site_location/admin-login"
+}
+
+generate_password_hash(){
+  raw_pass=$1
+  pass=$( php -r "echo( password_hash($raw_pass,PASSWORD_BCRYPT) );" )
+  echo $pass
+}
+
+
+reset_database(){
+working_dir=$(dirname $0)
+echo "Apagando o banco de dados (caso não queira essa opção cancele esse operação)"
+mysql -u $db_user -p $schema << EOF
+  USE $schema;
+  DROP DATABASE $schema;
+EOF
+echo "Recriando o banco de dados"
+mysql -u $db_user -p < $working_dir/database_12-05-2020.sql
+rm $working_dir/public/uploads/*
+exit 0
+}
+
+show_usage(){
+  echo $(basename $0) "email" "email_pass"
+  exit 0
+}
+
+
+[ -z $1 ] && show_usage
+[ "$1" = "--reset-db" ] && reset_database
+
+add_new_admin $1 $2 $3
